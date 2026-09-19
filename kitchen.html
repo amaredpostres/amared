@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <script>
+    try {
+      if (new URLSearchParams(window.location.search).get("hub") === "1") {
+        document.documentElement.classList.add("hubBoot");
+      } else {
+        document.documentElement.classList.add("hubReady");
+      }
+    } catch (_e) {
+      document.documentElement.classList.add("hubReady");
+    }
+  </script>
+  <style>
+    html.hubBoot body { opacity: 1; }
+    html.hubReady body { opacity: 1; transition: opacity .12s ease; }
+    html.hubBoot body { overflow: hidden; }
+      .amHubBootOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 130000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(255,245,238,.68);
+      backdrop-filter: blur(10px);
+      box-sizing: border-box;
+    }
+    html.hubBoot .amHubBootOverlay{ display:flex; }
+    html.hubReady .amHubBootOverlay{ display:none; }
+    .amHubBootCard{
+      width: fit-content;
+      max-width: min(420px, calc(100vw - 32px));
+      background: linear-gradient(180deg, rgba(255,252,249,.98), rgba(255,244,236,.95));
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 40px rgba(64,17,2,.12);
+      box-sizing: border-box;
+    }
+    .amHubBootRow{
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .amHubBootRow > div:last-child{ min-width:0; }
+    .amHubBootSpinner{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(64,17,2,.12);
+      border-top-color: rgba(242,91,143,.82);
+      animation: amHubBootSpin 1s linear infinite;
+      flex: 0 0 auto;
+    }
+    .amHubBootTitle{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.08;
+      color:#401102;
+    }
+    .amHubBootSub{
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: rgba(64,17,2,.72);
+    }
+    @media (max-width: 560px){
+      .amHubBootCard{
+        max-width: calc(100vw - 28px);
+        padding: 14px 16px;
+      }
+      .amHubBootTitle{ font-size: 16px; }
+      .amHubBootSub{ font-size: 12.5px; }
+    }
+    @keyframes amHubBootSpin{ to{ transform: rotate(360deg); } }
+
+/* ===== Kitchen shared header alignment ===== */
+.kitchenPage.is-app .kitchenTopbarInner.amSectionTopbarInner{
+  max-width:1100px;
+  margin:0 auto;
+  padding-inline:18px !important;
+  justify-content:space-between !important;
+}
+.kitchenPage.is-app .kitchenTopbarAppBrand.amSectionBrand{
+  flex:1 1 auto;
+  width:auto !important;
+  max-width:100%;
+  margin:0 !important;
+  justify-content:flex-start !important;
+  padding-inline:0 !important;
+}
+.kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+  align-items:flex-start !important;
+  text-align:left !important;
+}
+.kitchenPage.is-app .kitchenTopbarAppBrand .amSectionTitle{
+  font-size:clamp(20px, 1.7vw, 22px) !important;
+}
+.kitchenPage.is-app .kitchenTopbarAppBrand .amSectionSubtitle{
+  font-size:12.5px !important;
+}
+@media (max-width: 860px){
+  .kitchenPage.is-app .kitchenTopbarInner.amSectionTopbarInner{
+    justify-content:center !important;
+    padding-inline:18px !important;
+  }
+  .kitchenPage.is-app .kitchenTopbarAppBrand.amSectionBrand{
+    margin:0 auto !important;
+    justify-content:center !important;
+    padding-inline:8px !important;
+  }
+  .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+    align-items:center !important;
+    text-align:center !important;
+  }
+  .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionTitle{
+    font-size:clamp(23px, 6vw, 25px) !important;
+  }
+}
+
+</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMARED · Cocina</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="styles.css?v=20260505-fonts-v1">
+
+  <style>
+    /* ✅ Solo estilos puntuales de esta vista (lo demás está en styles.css) */
+    .topActions{
+      max-width:1100px;
+      margin: 12px auto 0;
+      padding:12px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .kitchenPage .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding-inline:18px;
+    }
+
+    @media (min-width: 861px){
+      .kitchenPage .container{
+        padding-top:18px;
+        padding-left:18px;
+        padding-right:18px;
+      }
+      .kitchenPage .topActions{
+        padding-left:18px;
+        padding-right:18px;
+      }
+    }
+    
+    
+    
+    
+    .btnLinkLike{ text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+      
+    /* ✅ FIX: Overlay de carga centrado y bonito */
+    .modalOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 9999;
+    }
+    
+    .modalBox{
+      width: 100%;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 18px 40px rgba(64,17,2,.12);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Costos modal scroll (HTML fallback) */
+    #costsModal{ align-items:flex-start; overflow:auto; -webkit-overflow-scrolling:touch; }
+    #costsModal .modalBox{ max-height: calc(100vh - 32px); overflow:hidden; display:flex; flex-direction:column; }
+    #costsModal #costsEditor{ flex:1; min-height:0; overflow:auto; -webkit-overflow-scrolling:touch; padding-right:6px; }
+
+      /* ✅ Login actions responsive */
+      .loginActions{
+        display: flex;
+        gap: 10px;
+        width: 100%;
+      }
+      
+      .loginActions .btn,
+      .loginActions .btnLinkLike{
+        flex: 1;
+        width: 100%;
+      }
+      
+      @media (max-width: 520px){
+        .loginActions{
+          flex-direction: column;
+        }
+      }
+    /* ✅ Loader centrado + dinámico */
+      .modalOverlay{
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 9999;
+      }
+      
+      .modalBox{
+        width: 100%;
+        background: rgba(255,255,255,.92);
+        border: 1px solid rgba(255,255,255,.84);
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow: 0 18px 40px rgba(64,17,2,.12);
+        backdrop-filter: blur(10px);
+      }
+      
+      /* Spinner */
+      .spin{
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        border: 4px solid rgba(64,17,2,.15);
+        border-top-color: rgba(64,17,2,.85);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+
+  
+
+    /* ===== v49: header/login AMARED centrado ===== */
+    .kitchenTopbarInner{ justify-content:space-between !important; }
+    .kitchenTopbarLoginBrand{
+      display:none;
+      width:100%;
+      align-items:center;
+      justify-content:center;
+    }
+    .kitchenTopbarLoginBrand img{
+      height:48px;
+      width:auto;
+      display:block;
+    }
+    .kitchenTopbarAppBrand{ display:flex; align-items:center; gap:10px; }
+    .kitchenHeaderActions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .kitchenPage.is-login .kitchenTopbarInner{ justify-content:center !important; }
+    .kitchenPage.is-login .kitchenTopbarLoginBrand{ display:flex; }
+    .kitchenPage.is-login .kitchenTopbarAppBrand,
+    .kitchenPage.is-login .kitchenHeaderActions{ display:none !important; }
+    .kitchenPage.is-app .kitchenTopbarLoginBrand{ display:none !important; }
+    .kitchenPage.is-app .kitchenTopbarAppBrand{ display:flex; }
+    .kitchenPage #loginBox .heroTitle{ font-size:clamp(22px,2.2vw,28px) !important; }
+    .kitchenPage #loginBox .heroSubtitle{ font-size:clamp(14px,1.3vw,16px) !important; }
+    @media (max-width: 860px){
+      .kitchenTopbarLoginBrand img{ height:42px; }
+      .kitchenPage.is-app .kitchenTopbarInner{ justify-content:center !important; }
+      .kitchenPage.is-app .kitchenTopbarAppBrand{ margin:0 auto; }
+      .kitchenPage.is-app .kitchenTopbarAppBrand > div{ text-align:center; }
+      .kitchenPage.is-app .kitchenHeaderActions{ display:none !important; }
+      .kitchenPage #loginBox .heroTitle{ font-size:clamp(21px,6.4vw,26px) !important; }
+    }
+
+  
+
+    /* ===== Kitchen chrome sync ===== */
+    .kitchenTopbarInner{ justify-content:space-between !important; }
+    .kitchenPage.is-login .kitchenTopbarInner{ justify-content:center !important; }
+    .kitchenPage.is-app .kitchenTopbarInner{ justify-content:space-between !important; }
+    .kitchenPage.is-app .kitchenTopbarAppBrand{ width:auto; justify-content:flex-start !important; margin:0; }
+    .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{ align-items:flex-start; text-align:left; }
+    .kitchenPage.is-app .kitchenHeaderActions{ display:flex; }
+    .kitchenPage .ttl{ font-size:clamp(20px, 1.7vw, 22px) !important; }
+    .kitchenPage .sub{ font-size:12.5px !important; }
+    @media (max-width: 860px){
+      .kitchenPage.is-app .kitchenTopbarInner{ justify-content:space-between !important; gap:12px; }
+      .kitchenPage.is-app .kitchenTopbarAppBrand{ width:auto; justify-content:flex-start !important; margin:0; }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{ align-items:flex-start; text-align:left; }
+      .kitchenPage.is-app .kitchenHeaderActions{ display:none !important; }
+      .kitchenPage .ttl{ font-size:clamp(23px, 6vw, 25px) !important; }
+      .kitchenPage .sub{ font-size:12.5px !important; }
+    }
+
+
+    /* ===== Ajuste final mobile header ===== */
+    @media (max-width: 860px){
+      .kitchenPage.is-app .kitchenTopbarInner{
+        justify-content:center !important;
+        gap:12px;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand{
+        width:100%;
+        justify-content:center !important;
+        margin:0 auto !important;
+        text-align:center;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+        align-items:center !important;
+        text-align:center !important;
+        width:auto;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .ttl,
+      .kitchenPage.is-app .kitchenTopbarAppBrand .sub,
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionTitle,
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionSubtitle{
+        display:block !important;
+        visibility:visible !important;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .ttl,
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionTitle{
+        font-size:clamp(24px, 6.4vw, 27px) !important;
+        line-height:1.05 !important;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .sub,
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionSubtitle{
+        font-size:13px !important;
+        line-height:1.18 !important;
+        opacity:.72 !important;
+      }
+      .kitchenPage.is-app .kitchenHeaderActions{
+        display:none !important;
+      }
+    }
+
+  
+    .kitchenPage.is-app .kitchenTopbarAppBrand{
+      display:flex;
+    }
+    .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+      align-items:flex-start;
+      text-align:left;
+    }
+    @media (max-width: 860px){
+      .kitchenPage.is-app .kitchenTopbarInner{ justify-content:center !important; }
+      .kitchenPage.is-app .kitchenTopbarAppBrand{
+        margin:0 auto;
+        justify-content:center !important;
+      }
+      .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+        align-items:center;
+        text-align:center;
+      }
+      .kitchenPage.is-app .kitchenHeaderActions{ display:none !important; }
+    }
+
+
+/* ===== Final header alignment: Kitchen ===== */
+.kitchenPage.is-app .kitchenTopbarInner.amSectionTopbarInner{
+  align-items:center !important;
+}
+@media (min-width: 861px){
+  .kitchenPage.is-app .kitchenTopbarInner.amSectionTopbarInner{
+    justify-content:space-between !important;
+    gap:14px !important;
+  }
+  .kitchenPage.is-app .kitchenTopbarAppBrand.amSectionBrand{
+    width:auto !important;
+    max-width:calc(100% - 200px) !important;
+    margin:0 !important;
+    justify-content:flex-start !important;
+    padding-inline:10px !important;
+  }
+  .kitchenPage.is-app .kitchenTopbarAppBrand .amSectionBrandMeta{
+    align-items:flex-start !important;
+    text-align:left !important;
+  }
+}
+
+</style>
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260918"><script src="config.js?v=20260918"></script><script src="runtime.js?v=20260918"></script></head>
+
+<body class="kitchenPage is-login amaredV2 workspacePage">
+  <div class="amHubBootOverlay" aria-hidden="true">
+  <div class="amHubBootCard">
+    <div class="amHubBootRow">
+      <div class="amHubBootSpinner"></div>
+      <div>
+        <div class="amHubBootTitle">Cargando página…</div>
+        <div class="amHubBootSub">Estamos preparando tu espacio.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<header class="topbar">
+    <div class="topbarInner kitchenTopbarInner amSectionTopbarInner">
+      <div class="kitchenTopbarLoginBrand amLoginTopbarBrand" aria-label="AMARED">
+        <img class="amLoginTopbarLogo" src="assets/Logo-Amared.svg" alt="AMARED">
+      </div>
+
+      <div class="amSectionBrand kitchenTopbarAppBrand">
+        <img class="amSectionBrandLogo" src="assets/Logo-Isotipo-Amared.svg" alt="AMARED">
+        <div class="amSectionBrandMeta">
+          <div class="amSectionTitle">Cocina</div>
+          <div class="amSectionSubtitle">Producción diaria</div>
+        </div>
+      </div>
+
+      <div class="amSectionActions kitchenHeaderActions">
+        <button id="btnRefresh" class="btn amBtnWarm" type="button" style="display:none;">Recargar</button>
+        <button id="btnLogout" class="btn amBtnNeutral" type="button" style="display:none;">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN BOX -->
+  <div class="container">
+    <div id="loginBox" class="card amLoginCard">
+      <div class="amLoginHero">
+        <h1 class="amLoginTitle">Acceso Cocina</h1>
+        <p class="amLoginLead">Selecciona un perfil aprobado e ingresa tu contraseña.</p>
+      </div>
+
+      <div class="field">
+        <label for="selOperator">Perfil</label>
+        <select id="selOperator" class="input" style="width:100%;"></select>
+        <div class="amLoginFieldHint">Solo aparecen perfiles activos con categoría <b>kitchen</b> o <b>admin</b>.</div>
+      </div>
+
+      <div class="field" style="margin-top:10px;">
+        <label for="inpPin">Contraseña</label>
+        <div class="amLoginPinRow">
+          <input id="inpPin" class="input" type="password" placeholder="••••••">
+          <button id="btnTogglePin" class="amPinToggleBtn" type="button" aria-label="Mostrar contraseña">👁</button>
+        </div>
+      </div>
+
+      <div class="amRememberWrap">
+        <label class="amRememberLabel">
+          <input id="chkRemember" type="checkbox">
+          <span>Recuérdame en este dispositivo</span>
+        </label>
+        <div class="amRememberHint">Si lo activas, la próxima vez entrarás automáticamente desde este navegador.</div>
+      </div>
+
+      <div class="amLoginActionsRow">
+        <button id="btnLogin" class="btn primary" type="button">Ingresar</button>
+        <a id="btnManageProfiles" class="btn secondary btnLinkLike" href="profiles.html" target="_blank" rel="noopener">Gestionar perfiles</a>
+      </div>
+
+      <div id="loginErr" class="status amLoginStatus"></div>
+    </div>
+
+    <!-- APP -->
+
+    <div id="app" style="display:none;">
+      <div class="layout">
+        
+        <section class="card" id="prodSection">
+          <h2 class="cardTitle">Producción</h2>
+          <div class="muted small" style="margin-bottom:10px;">
+            Regla: pedidos antes de las <b>3:00 p.m.</b> son para hoy; después de las 3:00 p.m. son informativos para mañana.
+          </div>
+
+          <div class="prodTabs">
+            <button id="tabProdToday" class="tabBtn active" type="button">Hoy</button>
+            <button id="tabProdBacklog" class="tabBtn" type="button">Pendientes pagados</button>
+          </div>
+
+          <div id="prodPanelToday">
+            <div id="todayWrap"></div>
+          </div>
+
+          <div id="prodPanelBacklog" class="hidden" style="margin-top:10px;">
+            <div class="muted small" style="margin-bottom:10px;">
+              Pedidos pagados de días anteriores que siguen en <b>"No iniciar"</b>.
+            </div>
+            <div id="backlogWrap"></div>
+          </div>
+        </section>
+
+
+        <section class="card">
+          <h2 class="cardTitle">Informativo (mañana)</h2>
+          <div class="muted small" style="margin-bottom:10px;">
+            Pedidos creados después de las 3:00 p.m. (hora Colombia).
+          </div>
+
+          <div id="tomorrowWrap"></div>
+        </section>
+      </div>
+
+      
+      
+      
+      <section class="card" style="margin-top:14px;">
+        <h2 class="cardTitle">En proceso</h2>
+
+        <div class="prodTabs" style="margin-top:8px;">
+          <button id="tabInProgAll" class="tabBtn active" type="button">Todos</button>
+          <button id="tabInProgToday" class="tabBtn" type="button">Del día</button>
+          <button id="tabInProgOlder" class="tabBtn" type="button">Anteriores</button>
+        </div>
+
+        <div id="inProgPanelAll">
+          <div id="inProgressWrapAll"></div>
+        </div>
+
+        <div id="inProgPanelToday" class="hidden" style="margin-top:10px;">
+          <div id="inProgressWrapToday"></div>
+        </div>
+
+        <div id="inProgPanelOlder" class="hidden" style="margin-top:10px;">
+          <div id="inProgressWrapOlder"></div>
+        </div>
+      </section>
+
+
+
+      <section class="card" style="margin-top:14px;">
+        <h2 class="cardTitle">Finalizados</h2>
+        <div id="doneWrap"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading" class="amLoadingOverlay" aria-hidden="true" style="display:none;">
+    <div class="amLoadingBackdropFx" aria-hidden="true"></div>
+    <div class="amLoadingCard">
+      <div class="amLoadingRow">
+        <div id="loadingSpin" class="amSpinner"></div>
+        <div>
+          <div id="loadingTitle" class="amLoadingTitle">Cargando…</div>
+          <div id="loadingMsg" class="amLoadingSub">Procesando</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COSTOS MODAL (si lo usas) -->
+  <div id="costsModal" class="modalOverlay" aria-hidden="true" style="display:none;">
+    <div class="modalBox" style="max-width:900px;">
+      <div class="rowBetween">
+        <div style="font-weight:950; font-size:18px;">Costos (solo lectura)</div>
+        <button id="btnCloseCosts" class="iconBtn amModalCloseX" type="button" aria-label="Cerrar" title="Cerrar">✕</button>
+      </div>
+
+      <div id="costsEditor" style="margin-top:12px;"></div>
+      <div id="costsGateErr" class="muted small" style="margin-top:10px; color:#b00020;"></div>
+    </div>
+  </div>
+
+  <script src="kitchen-costs.js?v=20260302-fix7u"></script>
+  <script src="kitchen.js?v=20260329-async-sections-v4"></script>
+
+<script src="experience.js?v=20260918" defer></script></body>
+</html>

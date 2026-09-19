@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <script>
+    try {
+      if (new URLSearchParams(window.location.search).get("hub") === "1") {
+        document.documentElement.classList.add("hubBoot");
+      } else {
+        document.documentElement.classList.add("hubReady");
+      }
+    } catch (_e) {
+      document.documentElement.classList.add("hubReady");
+    }
+  </script>
+  
+<style>
+  html.hubBoot body { opacity: 1; overflow: hidden; }
+  html.hubReady body { opacity: 1; transition: opacity .12s ease; }
+  .amHubBootOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 130000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(255,245,238,.68);
+      backdrop-filter: blur(10px);
+      box-sizing: border-box;
+    }
+    html.hubBoot .amHubBootOverlay{ display:flex; }
+    html.hubReady .amHubBootOverlay{ display:none; }
+    .amHubBootCard{
+      width: fit-content;
+      max-width: min(420px, calc(100vw - 32px));
+      background: linear-gradient(180deg, rgba(255,252,249,.98), rgba(255,244,236,.95));
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 40px rgba(64,17,2,.12);
+      box-sizing: border-box;
+    }
+    .amHubBootRow{
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .amHubBootRow > div:last-child{ min-width:0; }
+    .amHubBootSpinner{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(64,17,2,.12);
+      border-top-color: rgba(242,91,143,.82);
+      animation: amHubBootSpin 1s linear infinite;
+      flex: 0 0 auto;
+    }
+    .amHubBootTitle{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.08;
+      color:#401102;
+    }
+    .amHubBootSub{
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: rgba(64,17,2,.72);
+    }
+    @media (max-width: 560px){
+      .amHubBootCard{
+        max-width: calc(100vw - 28px);
+        padding: 14px 16px;
+      }
+      .amHubBootTitle{ font-size: 16px; }
+      .amHubBootSub{ font-size: 12.5px; }
+    }
+    @keyframes amHubBootSpin{ to{ transform: rotate(360deg); } }
+
+/* ===== Costo unitario móvil (accordion cards) ===== */
+.unitDesktopOnly{ display:block; }
+.unitMobileOnly{ display:none; }
+.unitMobileList{ display:grid; gap:12px; margin-top:10px; }
+.unitMobileCard{
+  border:1px solid rgba(64,17,2,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.78);
+  overflow:hidden;
+  box-shadow:0 10px 24px rgba(64,17,2,.06);
+}
+.unitMobileCard summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.unitMobileCard summary::-webkit-details-marker{ display:none; }
+.unitMobileHead{ min-width:0; flex:1; }
+.unitMobileTitle{ font-weight:950; line-height:1.15; }
+.unitMobileSub{ margin-top:5px; color:rgba(64,17,2,.62); font-size:12px; font-weight:850; }
+.unitMobileChevron{
+  flex:0 0 auto;
+  width:30px; height:30px; border-radius:999px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(64,17,2,.10);
+  background:rgba(255,255,255,.92);
+  font-weight:950;
+  color:rgba(64,17,2,.72);
+}
+.unitMobileCard[open] .unitMobileChevron{
+  background:rgba(242,91,143,.12);
+  border-color:rgba(242,91,143,.20);
+}
+.unitMobilePreview{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.unitMobileChip{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:34px; padding:0 12px; border-radius:999px;
+  border:1px solid rgba(64,17,2,.10);
+  background:rgba(255,255,255,.86);
+  font-weight:900; font-size:12.5px;
+}
+.unitMobileBody{ padding:0 14px 14px; border-top:1px solid rgba(64,17,2,.08); background:rgba(255,255,255,.92); }
+.unitMetricGrid{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:12px; }
+.unitMetric{ border:1px solid rgba(64,17,2,.08); border-radius:14px; padding:10px 12px; background:rgba(255,248,242,.90); }
+.unitMetricLabel{ font-size:12px; font-weight:850; color:rgba(64,17,2,.62); }
+.unitMetricValue{ margin-top:4px; font-size:16px; font-weight:950; color:var(--choco); }
+.unitIngWrap{ margin-top:12px; }
+.unitIngTitle{ font-weight:950; margin-bottom:8px; }
+.unitIngList{ display:grid; gap:8px; }
+.unitIngItem{
+  display:flex; justify-content:space-between; gap:12px; align-items:flex-start;
+  border:1px solid rgba(64,17,2,.08); border-radius:14px; padding:10px 12px;
+  background:rgba(255,255,255,.88);
+}
+.unitIngName{ font-weight:900; line-height:1.15; }
+.unitIngMeta{ margin-top:3px; font-size:12px; font-weight:800; color:rgba(64,17,2,.62); }
+.unitIngCost{ white-space:nowrap; font-weight:950; }
+@media (max-width: 860px){
+  .unitDesktopOnly{ display:none !important; }
+  .unitMobileOnly{ display:grid !important; }
+}
+@media (min-width: 861px){
+  .unitDesktopOnly{ display:block !important; }
+  .unitMobileOnly{ display:none !important; }
+}
+
+/* ===== Costo unitario escritorio: desglose desplegable ===== */
+.unitDesktopRow{ cursor:pointer; }
+.unitDesktopRow:hover td{ background:rgba(255,241,246,.45); }
+.unitDesktopDessertCell{ display:flex; align-items:center; gap:10px; min-width:0; font-weight:950; }
+.unitDesktopChevron{ flex:0 0 auto; width:28px; height:28px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(242,91,143,.24); background:rgba(255,241,246,.92); color:var(--choco); transition:transform .18s ease, background .18s ease; }
+.unitDesktopRow.isOpen .unitDesktopChevron{ transform:rotate(180deg); background:rgba(242,91,143,.16); }
+.unitDesktopBreakRow.hidden{ display:none; }
+.unitDesktopBreakRow td{ padding:0 !important; background:rgba(255,253,251,.98); }
+.unitDesktopBreakRow > td > div{ border-top:1px solid rgba(64,17,2,.08); }
+
+
+/* ===== Aviso flotante de carga no bloqueante ===== */
+.costsSyncBadge{
+  position:fixed;
+  top:calc(env(safe-area-inset-top, 0px) + 86px);
+  right:14px;
+  z-index:9605;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  max-width:min(380px, calc(100vw - 28px));
+  padding:12px 14px;
+  border-radius:18px;
+  border:1px solid rgba(64,17,2,.10);
+  background:rgba(255,255,255,.96);
+  box-shadow:0 16px 36px rgba(64,17,2,.16);
+  backdrop-filter: blur(10px);
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(-8px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.costsSyncBadge.isVisible{ opacity:1; transform:translateY(0); }
+.costsSyncBadgeSpin{
+  width:18px; height:18px; border-radius:999px; flex:0 0 auto;
+  border:2px solid rgba(64,17,2,.18);
+  border-top-color:rgba(64,17,2,.70);
+  animation:amHubBootSpin 1s linear infinite;
+}
+.costsSyncBadgeBody{ min-width:0; }
+.costsSyncBadgeTitle{ font-size:13.5px; font-weight:950; line-height:1.15; color:#401102; }
+.costsSyncBadgeSub{ margin-top:4px; font-size:12px; line-height:1.28; font-weight:800; color:rgba(64,17,2,.68); }
+@media (max-width: 720px){
+  .costsSyncBadge{ left:12px; right:12px; top:calc(env(safe-area-inset-top, 0px) + 78px); max-width:none; padding:11px 12px; }
+}
+
+</style>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>AMARED · Compras y Recetas</title>
+<!-- ✅ favicon (misma línea gráfica) -->
+<link href="assets/favicon.ico" rel="icon" type="image/x-icon">
+<link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<!-- ✅ estilos globales AMARED -->
+<link href="styles.css?v=20260513-bg-recipes-admin-v38" rel="stylesheet">
+<!-- ✅ estilos de Compras / Recetas -->
+<link href="costs.css?v=20260515-unit-cost-recipes-db-sync-v41" rel="stylesheet">
+<style>
+/* ===== Ingredientes modal responsive ===== */
+#ingModalBack .pCatGrid.ingGrid{grid-template-columns: 1fr 1fr;}
+@media (max-width: 720px){
+  #ingModalBack .modal{width: min(560px, 96vw) !important;}
+  #ingModalBack .pCatGrid.ingGrid{grid-template-columns: 1fr !important; gap: 12px;}
+}
+
+/* ===== Confirm delete modal ===== */
+#ingConfirmBack.hidden{display:none;}
+#ingConfirmBack .modal{width:min(520px, 92vw);}
+#ingConfirmBack .modalBody{padding:14px;}
+#ingConfirmBack .confirmBtns{display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;}
+#ingConfirmBack .confirmHint{margin-top:8px;}
+
+/* ===== Recetas UX v3 ===== */
+#viewRecipes .card{overflow:hidden;}
+.pRecipeGrid{gap:16px;}
+.pRecipeLeft{position:sticky; top:10px;}
+@media (max-width: 860px){ .pRecipeLeft{position:static;} }
+
+/* Postres list */
+.pList{display:flex; flex-direction:column; gap:10px;}
+.pDessertBtn{
+  border-radius:16px;
+  padding:12px 14px;
+  transition:transform .08s ease, box-shadow .12s ease, background .12s ease;
+  box-shadow: 0 8px 22px rgba(64,17,2,.06);
+}
+.pDessertBtn:hover{transform:translateY(-1px); box-shadow:0 10px 26px rgba(64,17,2,.09);}
+.pDessertBtn .badge{min-width:34px; text-align:center;}
+.pDessertBtn .chev{
+  width:28px; height:28px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:999px;
+  border:1px solid rgba(64,17,2,.12);
+  background:rgba(255,255,255,.9);
+  font-weight:950;
+}
+.pDessertBtn.isActive .chev{background:rgba(255,105,160,.12); border-color:rgba(255,105,160,.30);}
+
+/* Right panel */
+#recipeRightWrap{min-height:340px;}
+#recipeRightLocked{margin-top:6px;}
+#recipeRightInner .rowBetween{
+  position:sticky; top:0;
+  z-index:3;
+  padding:10px 0;
+  background:linear-gradient(180deg, rgba(255,248,242,.98), rgba(255,248,242,.75));
+  backdrop-filter: blur(10px);
+}
+#recipeEditor{
+  max-height: 62vh;
+  overflow:auto;
+  padding-right:6px;
+}
+@media (max-width: 860px){
+  #recipeEditor{max-height:none; overflow:visible; padding-right:0;}
+}
+
+
+
+/* ===== Resumen móvil de postres ===== */
+.pSummaryMobile{ display:none; }
+.summaryMobileWrap{ display:grid; gap:12px; }
+.summaryMobileBlock{
+  border:1px solid rgba(64,17,2,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.86);
+  box-shadow:0 10px 24px rgba(64,17,2,.06);
+  overflow:hidden;
+}
+.summaryMobileBlock.isToday{ border-left:6px solid rgba(246,186,96,.92); }
+.summaryMobileBlock.isLate{ border-left:6px solid rgba(242,91,143,.92); }
+.summaryMobileHead{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  padding:14px 14px 10px;
+}
+.summaryMobileTitle{ font-weight:950; line-height:1.1; }
+.summaryMobileHint{ margin-top:4px; font-size:12px; font-weight:800; color:rgba(64,17,2,.62); }
+.summaryMobileCount{
+  min-width:38px; min-height:38px; padding:0 12px; border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:rgba(64,17,2,.06); font-weight:950;
+}
+.summaryMobileRows{ display:grid; gap:8px; padding:0 14px 14px; }
+.summaryMobileRow{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border:1px solid rgba(64,17,2,.08); border-radius:14px; padding:10px 12px;
+  background:rgba(255,250,246,.92); font-weight:900;
+}
+.summaryMobileRow strong{ font-size:15px; }
+.summaryMobileEmpty{
+  border:1px dashed rgba(64,17,2,.12); border-radius:14px; padding:12px;
+  background:rgba(255,255,255,.66); font-size:12.5px; font-weight:800; color:rgba(64,17,2,.62);
+}
+
+/* ===== Compras móvil más compactas ===== */
+@media (max-width: 720px){
+  .pSummaryGrid{ display:none !important; }
+  .pSummaryMobile{ display:block; margin-top:6px; }
+  .pCostsHead{ gap:10px; }
+  .pControls{ gap:8px; }
+  .pGroups{ gap:10px; }
+  .pGroup summary{ padding:12px 12px 12px 8px !important; }
+  .pGroupBody{ padding:10px; }
+  .pItem{ border-radius:16px; }
+  .pItemTop{ gap:10px; align-items:flex-start; }
+  .pName{ font-size:15px; line-height:1.12; }
+  .pSubLine{ font-size:12px; line-height:1.25; }
+  .pRight{ gap:8px; }
+  .pPill{ min-height:28px; padding:0 10px; font-size:11.5px; }
+  .pGear{ width:34px; height:34px; }
+  .pNums{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+  .pNum{ padding:10px 8px; }
+  .pNum .lbl{ font-size:11px; }
+  .pNum .val{ font-size:15px; }
+  .pBuyRow{ gap:10px; }
+  .pSwitch{ min-width:unset; }
+  .pBuyInputs{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+    align-items:center;
+  }
+  .pBuyInputs .input{ min-width:0; height:40px; }
+  .pTinyBtn{ min-width:70px; height:40px; padding:0 12px; }
+  .pBuyMeta{ gap:6px; }
+  .pBuyMeta .mi{ font-size:11.5px; padding:7px 9px; }
+}
+@media (max-width: 420px){
+  .pBuyInputs{ grid-template-columns:1fr; }
+  .pTinyBtn{ width:100%; }
+}
+
+/* Ingredient row */
+.pRecipeRow{
+  gap:12px;
+  border-radius:16px;
+}
+.pRecipeRow.isOn{background:rgba(255,255,255,.92);}
+.pRecipeRow.isOff{background:rgba(255,255,255,.60);}
+.pRecipeRow .qty{max-width:140px;}
+.recipeNoMarginBox{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  border:1px solid rgba(242,91,143,.22);
+  background:rgba(242,91,143,.07);
+  border-radius:999px;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:950;
+  color:rgba(64,17,2,.78);
+  white-space:nowrap;
+}
+.recipeNoMarginBox input{accent-color:var(--pink, #f25b8f);}
+.recipeNoMarginBox.isOn{
+  background:rgba(242,91,143,.16);
+  border-color:rgba(242,91,143,.45);
+  color:var(--choco, #401102);
+}
+.recipeNoMarginInfo{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(242,91,143,.22);
+  background:rgba(242,91,143,.07);
+}
+.recipeNoMarginTitle{font-weight:950; color:var(--choco, #401102);}
+.recipeNoMarginText{margin-top:4px; font-size:12.5px; color:rgba(64,17,2,.72); line-height:1.35;}
+@media (max-width: 520px){
+  .pRecipeRow{flex-wrap:wrap; align-items:flex-start;}
+  .pRecipeRow .qty{width:100%; max-width:none;}
+}
+
+/* Switch (toggle) */
+.switch{
+  position:relative;
+  width:46px; height:28px;
+  border-radius:999px;
+  display:inline-block;
+  background:rgba(64,17,2,.12);
+  border:1px solid rgba(64,17,2,.14);
+  flex:0 0 auto;
+}
+.switch::after{
+  content:"";
+  position:absolute;
+  top:3px; left:3px;
+  width:22px; height:22px;
+  border-radius:999px;
+  background:white;
+  box-shadow:0 6px 14px rgba(0,0,0,.12);
+  transition:transform .18s ease, background .18s ease;
+}
+.switchInput{position:absolute; left:0; top:0; width:46px; height:28px; opacity:0; pointer-events:auto;}
+.switchWrap{position:relative; display:flex; align-items:center; gap:10px; min-width:120px; cursor:pointer;}
+.switchWrap .meta{font-size:12px; font-weight:900; opacity:.8;}
+.switchWrap.isOn .switch{background:rgba(255,105,160,.22); border-color:rgba(255,105,160,.38);}
+.switchWrap.isOn .switch::after{transform:translateX(18px);}
+
+
+/* ===== Recetas actions bar ===== */
+#viewRecipes .recipesActions{display:flex; gap:10px; flex-wrap:wrap;}
+#viewRecipes .btn.recipeAction{font-weight:950;}
+@media (max-width: 520px){
+  #viewRecipes .recipesActions{justify-content:flex-start !important;}
+}
+
+
+/* ===== Recetas: lista + editor inline ===== */
+#viewRecipes .pRecipeGrid{grid-template-columns: 1fr !important;}
+#viewRecipes #recipeRightWrap{display:none !important;}
+#viewRecipes .pRecipeLeft{position:static !important;}
+
+/* Cards postres */
+.pDessertCard{border-radius:18px; border:1px solid rgba(64,17,2,.12); background:rgba(255,255,255,.78); box-shadow:0 10px 28px rgba(64,17,2,.06); overflow:hidden;}
+.pDessertHead{display:flex; align-items:center; gap:12px; padding:14px 14px; cursor:pointer; user-select:none;}
+.pDessertHead:hover{background:rgba(255,255,255,.90);}
+.pDessertStripe{width:10px; align-self:stretch; border-radius:14px; background:linear-gradient(180deg, rgba(255,105,160,.85), rgba(255,200,120,.85));}
+.pDessertTitle{flex:1; min-width:0;}
+.pDessertTitle .name{font-weight:950; font-size:16px; line-height:1.15;}
+.pDessertTitle .sub{font-size:12px; opacity:.78; font-weight:850; margin-top:4px;}
+.pDessertMeta{display:flex; align-items:center; gap:10px;}
+.pDessertCount{min-width:38px; height:28px; padding:0 10px; display:flex; align-items:center; justify-content:center; border-radius:999px;
+  background:rgba(255,105,160,.12); border:1px solid rgba(255,105,160,.30); font-weight:950;}
+.pDessertChevron{width:32px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.92); border:1px solid rgba(64,17,2,.12); font-weight:950;}
+.pDessertCard.isOpen .pDessertChevron{background:rgba(255,105,160,.14); border-color:rgba(255,105,160,.30);}
+.pDessertPanel{border-top:1px solid rgba(64,17,2,.10); padding:12px 14px 14px; background:rgba(255,255,255,.92);}
+.pDessertPanel.hidden{display:none;}
+.pDessertPanelTop{display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap;}
+.pDessertPanelTop .hint{margin:0;}
+.pDessertPanelControls{display:flex; gap:10px; flex-wrap:wrap; width:100%;}
+.pDessertPanelControls .input{flex:1; min-width:220px;}
+.pDessertPanelScroll{max-height:58vh; overflow:auto; padding-right:6px; margin-top:10px;}
+.pDessertPanelActions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:14px; padding-top:12px; border-top:1px solid rgba(64,17,2,.10);}
+.pDessertPanelActions .btn{min-width:180px;}
+@media (max-width: 860px){
+  .pDessertPanelScroll{max-height:none; overflow:visible; padding-right:0;}
+  .pDessertPanelActions{flex-direction:column-reverse; align-items:stretch;}
+  .pDessertPanelActions .btn{width:100%; min-width:0;}
+}
+
+
+/* ===== Login con perfil / contraseña ===== */
+#unlockBack{
+  position:relative;
+  inset:auto;
+  background:transparent;
+  display:block;
+  place-items:normal;
+  padding:28px 16px 0;
+  z-index:1;
+}
+#unlockBack.hidden{ display:none !important; }
+#unlockBack .modal{
+  width:min(700px, 100%);
+  margin:0 auto;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--border);
+  border-radius:26px;
+  box-shadow:0 18px 40px rgba(64,17,2,.08);
+  overflow:visible;
+}
+.unlockGrid{ display:grid; gap:12px; padding:0 26px 26px; }
+.unlockPinRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.unlockEyeBtn{
+  min-width:54px;
+  height:48px;
+  padding:0 14px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(246,186,96,.96), rgba(245,196,108,.92));
+  box-shadow:0 10px 22px rgba(246,186,96,.22);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+}
+.unlockRemember{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  font-weight:850;
+  color:rgba(64,17,2,.82);
+  margin-top:10px;
+}
+.unlockRemember input{
+  width:18px;
+  height:18px;
+  accent-color:#ff5f95;
+  transform:none !important;
+}
+.unlockActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.unlockActions .btn,
+.unlockActions .btnLinkLike{
+  min-height:48px;
+}
+.costsHiddenAuxBtn{
+  display:none !important;
+}
+.btnLinkLike{
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.amLoginFieldHint{
+  margin-top:6px;
+  color:rgba(64,17,2,.78);
+  font-size:13.5px;
+  font-weight:800;
+  line-height:1.35;
+}
+.costsLoginTopbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(10px);
+  background:rgba(254,246,239,.72);
+  border-bottom:1px solid var(--border);
+}
+.costsLoginTopbarInner{ justify-content:center; }
+.costsLoginTopbar .amLoginTopbarBrand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+.costsLoginTopbar .amLoginTopbarLogo{
+  height:48px;
+  width:auto;
+  display:block;
+}
+body.is-app .costsLoginTopbar{ display:none !important; }
+.costsLoginModal.amLoginCard{
+  width:min(700px, 100%);
+  border-radius:26px;
+}
+.costsLoginModal .modalBody{ padding:0; }
+.costsLoginModal .field label{
+  font-size:12.5px;
+  color:rgba(64,17,2,.78);
+  font-weight:400;
+  margin-bottom:6px;
+}
+.costsLoginModal .input{
+  font-weight:400;
+  background:rgba(255,255,255,.85);
+}
+.costsLoginModal #loginProfile{ font-weight:400; }
+.costsLoginModal .amLoginHero{ text-align:center; padding:26px 26px 8px; }
+.costsLoginModal .amLoginTitle{
+  margin:0 0 8px;
+  text-align:center;
+  font-weight:950;
+  font-size:clamp(22px,2.15vw,28px);
+  line-height:1.05;
+}
+.costsLoginModal .amLoginLead{
+  margin:0;
+  text-align:center;
+  font-size:clamp(15px,1.35vw,17px);
+  color:rgba(64,17,2,.78);
+  font-weight:850;
+}
+.amRememberWrap{
+  margin-top:10px;
+}
+.amRememberHint{
+  margin-top:6px;
+  color:rgba(64,17,2,.66);
+  font-size:13px;
+  font-weight:750;
+  line-height:1.35;
+  padding:0;
+  border:none;
+  background:transparent;
+}
+.amLoginActionsRow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+@media (max-width: 720px){
+  #unlockBack{ padding:16px 12px 0; }
+  .costsLoginTopbar .amLoginTopbarLogo{ height:42px; }
+  #unlockBack .modal{ border-radius:22px; }
+  .unlockGrid{ padding:0 18px 18px; }
+  .costsLoginModal .amLoginHero{ padding:18px 18px 8px; }
+  .costsLoginModal .amLoginTitle{ font-size:clamp(20px,6.2vw,24px); }
+  .costsLoginModal .amLoginLead{ font-size:15px; }
+  .unlockActions,
+  .amLoginActionsRow{ grid-template-columns:1fr; }
+}
+
+
+
+/* ===== Loading overlay unificado ===== */
+#loadingBack.amLoadingOverlay{ z-index: 120000 !important; }
+#loadingBack.amLoadingOverlay.hidden{ display:none !important; }
+
+/* ===== Shared header sync: Costs ===== */
+.costsTopbarAppBrand.amSectionBrand{
+  flex:1 1 auto;
+  max-width:100%;
+}
+@media (max-width: 860px){
+  .costsTopbarAppBrand.amSectionBrand{
+    margin:0 auto;
+    justify-content:center !important;
+  }
+  .costsTopbarAppBrand .amSectionBrandMeta{
+    align-items:center;
+    text-align:center;
+  }
+}
+
+</style>
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260918"><script src="config.js?v=20260918"></script><script src="runtime.js?v=20260918"></script></head>
+<body class="costsPage is-login amaredV2 workspacePage">
+<a class="skipLink" href="#main-content">Saltar al contenido</a><div class="amHubBootOverlay" aria-hidden="true">
+  <div class="amHubBootCard">
+    <div class="amHubBootRow">
+      <div class="amHubBootSpinner"></div>
+      <div>
+        <div class="amHubBootTitle">Cargando página…</div>
+        <div class="amHubBootSub">Estamos preparando tu espacio.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<header class="topbar costsLoginTopbar" id="costsLoginTopbar">
+<div class="topbarInner costsLoginTopbarInner">
+<div class="amLoginTopbarBrand" aria-label="AMARED">
+<img class="amLoginTopbarLogo" src="assets/Logo-Amared.svg" alt="AMARED">
+</div>
+</div>
+</header>
+
+<!-- APP (solo después de desbloquear) -->
+<div class="page" id="appRoot" style="display:none;">
+<header class="topbar">
+<div class="topbarInner amSectionTopbarInner">
+<div class="amSectionBrand costsTopbarAppBrand">
+<img alt="AMARED" class="amSectionBrandLogo" src="assets/Logo-Isotipo-Amared.svg">
+<div class="amSectionBrandMeta">
+  <div class="amSectionTitle">Compras y Recetas</div>
+  <div class="amSectionSubtitle">Costos, compras e ingredientes</div>
+</div>
+</div>
+<div class="pTopBtns amSectionActions">
+<button class="btn secondary" id="btnReload">Recargar</button>
+<div aria-label="Compras y Recetas" class="pTabs" role="tablist">
+<button aria-selected="true" class="pTabBtn isActive" id="btnTabPurchases" role="tab">Compras</button>
+<button aria-selected="false" class="pTabBtn" id="btnTabRecipes" role="tab">Recetas</button>
+</div>
+<button class="btn" id="btnExit">Salir</button>
+</div>
+</div>
+</header>
+<main class="container" id="main-content">
+<div class="pGlobalMsg" id="globalMsg"></div>
+<!-- =================== VIEW: COMPRAS =================== -->
+<div id="viewPurchases">
+<section class="card">
+<div class="pMetaTitle">Compras pendientes (Pagado + No iniciar)</div>
+<div class="pMeta" id="meta">Cargando…</div>
+</section>
+<section class="card" style="margin-top:14px;">
+<h2 class="cardTitle">Costo unitario estimado</h2>
+<div class="hint" style="margin-top:4px;">Los productos sin rentabilidad se suman al precio final al mismo costo de compra, sin margen adicional.</div>
+<div class="pMiniTableWrap unitDesktopOnly" style="margin-top:8px;">
+<table class="pMiniTable isWide">
+<thead><tr>
+<th>Postre</th>
+<th class="num"><span class="unitThMain">$/u producción</span></th>
+<th class="num"><span class="unitThMain">Precio 60%</span></th>
+<th class="num"><span class="unitThMain">Sin rentabilidad</span><span class="unitThSub">Complementos</span></th>
+<th class="num"><span class="unitThMain">Precio final</span><span class="unitThSub">60% + sin rentabilidad</span></th>
+<th class="num"><span class="unitThMain">Lote</span></th>
+</tr></thead>
+<tbody id="unitCostRows"></tbody>
+</table>
+</div>
+<div id="unitCostMobileList" class="unitMobileOnly unitMobileList" style="margin-top:8px;"></div>
+<div class="pSmallMeta" id="unitCostMeta"></div>
+</section>
+<section class="card" id="summaryCard" style="margin-top:14px;">
+<div class="pSummaryGrid">
+<div>
+<div class="cardTitle" style="margin-bottom:8px;">Postres confirmados</div>
+<div class="hint" style="margin-bottom:10px;">Estos postres se usan para calcular ingredientes de todos los pedidos pagados que siguen en “No iniciar”.</div>
+<div class="pMiniTableWrap isCompact">
+<table class="pMiniTable isCompact">
+<thead><tr><th>Postre</th><th class="num">Cant.</th></tr></thead>
+<tbody id="dessertRows"></tbody>
+</table>
+</div>
+<div class="pSmallMeta" id="dessertsMeta"></div>
+</div>
+<div>
+<div class="cardTitle" style="margin-bottom:8px;">Pedidos recientes después de las 3:00 p.m.</div>
+<div class="hint" style="margin-bottom:10px;">Referencia rápida de pedidos nuevos creados después del corte de las 3:00 p.m.</div>
+<div class="pMiniTableWrap isCompact">
+<table class="pMiniTable">
+<thead><tr><th>Postre</th><th class="num">Cant.</th></tr></thead>
+<tbody id="lateRows"></tbody>
+</table>
+</div>
+<div class="pSmallMeta" id="lateMeta"></div>
+</div>
+</div>
+<div class="pSummaryMobile">
+<div class="summaryMobileWrap" id="summaryMobileList"></div>
+</div>
+</section>
+
+<section class="card" style="margin-top:14px;">
+<div class="pCostsHead">
+<div>
+<div class="cardTitle" style="margin-bottom:8px;">Ingredientes</div>
+<div class="hint" style="margin-top:6px;">Actualiza compra, presentación, precio, marca y tienda sin salir de <b>Compras</b>.</div>
+</div>
+
+</div><div class="pControls">
+<input class="input" id="inpSearch" placeholder="Buscar ingrediente…" type="text">
+<label class="pToggle" for="inpSearch">
+<input checked id="chkOnlyMissing" type="checkbox">
+<span>Solo faltantes</span>
+</label>
+<label class="pToggle">
+<input id="chkOnlySelected" type="checkbox">
+<span>Solo marcados</span>
+</label>
+</div><div class="hint" style="margin-top:10px;">
+            Marca <b>Comprar</b> y escribe <b>empaques</b> (según la última presentación guardada). Si no hay empaque, escribe cantidad directa en g/ml/m.
+          </div>
+
+<div class="pSmallMeta" id="costsMeta" style="margin-top:10px;"></div>
+<div class="pGroups" id="groups" style="margin-top:12px;"></div>
+</section><section class="card" style="margin-top:14px;"><div class="pCostsHead"><div><div class="cardTitle" style="margin-bottom:8px;">Administración de ingredientes</div><div class="hint" style="margin-top:6px;">Crea/elimina ingredientes y gestiona tiendas/marcas. Úsalo cuando toque mantenimiento.</div></div><div class="pTopBtns" style="justify-content:flex-end;">
+<button class="btn secondary" id="btnCatalogs">⚙️ Tiendas/Marcas</button>
+<button class="btn secondary" id="btnIngredients">🧩 Ingredientes</button>
+</div></div><details class="pAdminDetails" id="adminListDetails"><summary>Listado administrativo</summary><div class="hint" style="margin:10px 0 10px;">Vista completa para revisar presentación, costo por unidad, marca y tienda.</div><div class="pGroups" id="costGroups"></div></details></section>
+
+<div style="height:92px;"></div>
+</div>
+<!-- =================== VIEW: RECETAS =================== -->
+<div class="hidden" id="viewRecipes" style="display:none;">
+<section class="card">
+<div class="pCostsHead">
+<div>
+<div class="pMetaTitle">Recetas</div>
+<div class="hint" style="margin-top:6px;">Selecciona un postre, marca ingredientes, define cantidades por unidad y marca los productos <b>sin rentabilidad</b> que se cobran al costo. Se guarda en <b>RECETAS</b>.</div>
+<div class="hint" style="margin-top:6px;">⚠️ Este módulo requiere un <b>código adicional</b> para editar.</div>
+</div>
+<div class="pTopBtns recipesActions" style="justify-content:flex-end;">
+<button class="btn secondary recipeAction" id="btnDessertAdd">➕ Postre</button>
+<button class="btn secondary recipeAction" id="btnRecipesAddIngredient">🧩 Ingrediente</button>
+</div>
+</div>
+<div class="pSmallMeta" id="recipesMeta" style="margin-top:10px;"></div>
+</section>
+<section class="card" style="margin-top:14px;">
+<div class="pRecipeGrid">
+<div class="pRecipeLeft">
+<div class="cardTitle" style="margin-bottom:8px;">Postres</div>
+<input class="input" id="inpDessertSearch" placeholder="Buscar postre…">
+<div class="pList" id="dessertList" style="margin-top:10px;"></div>
+</div>
+<div class="pRecipeRight" id="recipeRightWrap">
+<div class="hint" id="recipeRightLocked" style="padding:14px; border:1px dashed rgba(64,17,2,.18); border-radius:14px; background:rgba(255,255,255,.6);">Selecciona un postre para editar su receta.</div>
+<div id="recipeRightInner" style="display:none;">
+<div class="rowBetween" style="gap:10px; align-items:center;">
+<div>
+<div class="cardTitle" id="recipeEditorTitle" style="margin-bottom:4px;">Selecciona un postre</div>
+<div class="hint" id="recipeEditorSub">Marca ingredientes y define cantidades por unidad.</div>
+</div>
+<button class="btn primary" disabled id="btnRecipeSave">Guardar receta</button>
+</div>
+<div class="pControls" style="margin-top:12px;">
+<input class="input" id="inpIngredientSearch" placeholder="Buscar ingrediente…">
+</div>
+<div class="pGroups" id="recipeEditor" style="margin-top:12px;"></div>
+</div>
+</div>
+</div></section>
+<div style="height:24px;"></div>
+</div>
+</main>
+<!-- Bottom bar (solo Compras) -->
+<div class="pBottomBar" id="bottomBar">
+<div class="pBottomLeft">
+<div class="pBottomTitle">Total estimado</div>
+<div class="pBottomValue" id="totalCop">$0</div>
+<div class="pBottomHint" id="totalHint">0 ingredientes marcados</div>
+</div>
+<button class="btn primary pBottomBtn" disabled id="btnRegister">Registrar compras</button>
+</div>
+</div>
+
+<!-- Mobile bottom nav (solo móvil) -->
+<div class="mobileNav hidden" id="mobileNav" aria-label="Navegación inferior">
+  <button class="mNavBtn" id="mNavReload" type="button" aria-label="Recargar">↻</button>
+
+  <div class="mNavTabs" role="tablist" aria-label="Cambiar sección">
+    <button class="mNavTab isActive" id="mNavGoPurchases" type="button" role="tab" aria-selected="true">Compras</button>
+    <button class="mNavTab" id="mNavGoRecipes" type="button" role="tab" aria-selected="false">Recetas</button>
+  </div>
+
+  <button class="mNavBtn" id="mNavExit" type="button" aria-label="Salir">⎋</button>
+</div>
+
+<!-- LOGIN (pantalla completa) -->
+<div class="modalOverlay" id="unlockBack">
+<div class="modal costsLoginModal amLoginCard">
+<div class="amLoginHero">
+<h2 class="amLoginTitle">Acceso Compras y Recetas</h2>
+<p class="amLoginLead">Selecciona un perfil aprobado e ingresa la contraseña.</p>
+</div>
+<div class="modalBody costsLoginBody" style="padding:0;">
+<div class="unlockGrid">
+  <div class="field">
+    <label for="loginProfile">Perfil</label>
+    <select id="loginProfile" class="input">
+      <option value="">Cargando perfiles…</option>
+    </select>
+    <div class="amLoginFieldHint">Solo aparecen perfiles activos con categoría <b>costs</b>, <b>payments</b> o <b>admin</b>.</div>
+  </div>
+
+  <div class="field" style="margin-top:10px;">
+    <label for="secretInput">Contraseña</label>
+    <div class="unlockPinRow amLoginPinRow">
+      <input autocomplete="current-password" class="input" id="secretInput" placeholder="••••••" type="password">
+      <button class="unlockEyeBtn amPinToggleBtn" id="btnToggleSecret" type="button" aria-label="Mostrar u ocultar contraseña">👁</button>
+    </div>
+  </div>
+
+  <div class="amRememberWrap">
+    <label class="unlockRemember amRememberLabel">
+      <input id="chkRememberDevice" type="checkbox">
+      <span>Recuérdame en este dispositivo</span>
+    </label>
+    <div class="hint amRememberHint">Si lo activas, la próxima vez entrarás automáticamente desde este navegador.</div>
+  </div>
+
+  <div class="unlockActions amLoginActionsRow">
+    <button class="btn primary" id="btnDoUnlock">Ingresar</button>
+    <a class="btn secondary btnLinkLike" href="profiles.html" target="_blank" rel="noopener">Gestionar perfiles</a>
+    <button class="btn secondary costsHiddenAuxBtn" id="btnClear" type="button" tabindex="-1" aria-hidden="true">Limpiar</button>
+  </div>
+
+  <div class="pErr" id="unlockMsg"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- LOGIN: RECETAS (código adicional) -->
+<div class="modalOverlay hidden" id="recipesUnlockBack">
+<div class="modal">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">🔐 Acceso a Recetas</div>
+<div class="modalSub" style="margin-top:4px;">Ingresa tu <b>código de Recetas</b>. Se valida en el servidor.</div>
+</div>
+<button aria-label="Cerrar" class="iconBtn costsModalClose" id="recipesUnlockCloseX" type="button">×</button>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pLoginRow">
+<input autocomplete="off" class="input" id="recipesPinInput" placeholder="Código de Recetas" type="password">
+<button class="btn primary" id="btnDoRecipesUnlock">Entrar</button>
+<button class="btn" id="btnRecipesClear">Limpiar</button>
+<button class="btn secondary" id="btnRecipesCancel">Cancelar</button>
+</div>
+<div class="pErr" id="recipesUnlockMsg"></div>
+<div class="hint" style="margin-top:10px;">Este módulo siempre pide el código por seguridad.</div>
+</div>
+</div>
+</div>
+<!-- MODAL: detalle/edición de costo (reutilizado en Compras y Costos) -->
+<div class="modalOverlay hidden" id="costModalBack">
+<div class="modal" style="width:min(920px, 96vw);">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" id="costModalTitle" style="font-weight:950;">Detalle</div>
+<div class="modalSub" id="costModalSub" style="margin-top:4px;">Edita la última presentación guardada (se actualizará en COSTOS_INGREDIENTES).</div>
+</div>
+<button aria-label="Cerrar" class="iconBtn costsModalClose" id="cmCancelX" type="button">×</button>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pFormGrid">
+<div>
+<div class="label">Unidad</div>
+<select class="input" id="cmUnitType">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="m">m</option>
+<option value="unidad">unidad</option>
+</select>
+</div>
+<div>
+<div class="label">Cantidad empaque</div>
+<input class="input" id="cmPackQty" min="0" placeholder="Ej: 1000" step="any" type="number">
+</div>
+<div>
+<div class="label">Precio empaque (COP)</div>
+<input class="input" id="cmPackPrice" min="0" placeholder="Ej: 9500" step="any" type="number">
+</div>
+</div>
+<div class="pUnitExtra" id="cmUnitExtra" style="display:none;">
+<div class="hint" style="margin:10px 0;">Si compras por <b>unidades</b>, define cuánto trae cada unidad (g/ml/m) para guardar el costo en unidad base.</div>
+<div class="pFormGrid">
+<div>
+<div class="label">Cantidad por unidad</div>
+<input class="input" id="cmUnitItemQty" min="0" placeholder="Ej: 20" step="any" type="number">
+</div>
+<div>
+<div class="label">Tipo</div>
+<select class="input" id="cmUnitItemType">
+<option value="">—</option>
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="m">m</option>
+</select>
+</div>
+</div>
+</div>
+<div class="pFormGrid" style="margin-top:10px;">
+<div>
+<div class="label">Marca</div>
+<select class="input" id="cmBrand"></select>
+</div>
+<div>
+<div class="label">Tienda</div>
+<select class="input" id="cmStore"></select>
+</div>
+</div>
+<div class="pSmallMeta" id="cmComputed" style="margin-top:10px;"></div>
+<div class="pErr" id="cmErr"></div>
+<div class="pModalActions">
+<button class="btn secondary" id="cmOpenCatalogs">⚙️ Tiendas/Marcas</button>
+<button class="btn primary" id="cmSave">Guardar cambios</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL: crear postre -->
+<div class="modalOverlay hidden" id="dessertModalBack">
+<div class="modal" style="width:min(560px, 92vw);">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">➕ Crear postre</div>
+<div class="modalSub" style="margin-top:4px;">Crea un postre nuevo para usarlo en RECETAS.</div>
+</div>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pCatBox" style="margin:0;">
+<div class="k" style="font-weight:950;">Nombre</div>
+<input class="input" id="dessertNameInput" placeholder="Ej: Arroz con leche" style="margin-top:8px;">
+<div class="hint" style="margin-top:10px;">El ID se genera automáticamente. (Puedes editarlo si deseas)</div>
+<input class="input" id="dessertIdInput" placeholder="Ej: arroz_con_leche" style="margin-top:8px;">
+<div class="pErr" id="dessertCreateMsg" style="margin-top:10px;"></div>
+<div class="confirmBtns" style="margin-top:12px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+<button class="btn secondary" id="btnDessertCancel">Cancelar</button>
+<button class="btn primary" id="btnDessertCreate">Crear</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL: administrar ingredientes -->
+<div class="modalOverlay hidden" id="ingModalBack">
+<div class="modal" style="width:min(980px, 96vw);">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">🧩 Ingredientes (Productos)</div>
+<div class="modalSub" style="margin-top:4px;">Agrega o elimina ingredientes. Se refleja en <b>COSTOS_INGREDIENTES</b> e <b>INVENTARIO</b>.</div>
+</div>
+<button aria-label="Cerrar" class="iconBtn costsModalClose" id="ingCloseX" type="button">×</button>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pCatGrid ingGrid">
+<div class="pCatBox">
+<div class="k" style="font-weight:950;">Agregar ingrediente</div>
+<div class="hint" style="margin-top:6px;">Crea el ingrediente en la base de datos con cantidad inicial 0 en inventario.</div>
+<div class="pCatRow" style="margin-top:10px;">
+<input class="input" id="ingNewKey" placeholder="Nombre del ingrediente (ej: Azúcar morena)">
+</div>
+<div class="pCatRow" style="margin-top:10px;">
+<select class="input" id="ingNewUnit">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="m">m</option>
+<option value="unidad">unidad</option>
+</select>
+<button class="btn secondary" id="btnAddIng">Agregar</button>
+</div>
+<div class="hint" style="margin-top:10px;">
+              Opcional (solo si el ingrediente se compra por unidades pero se consume en g/ml/m): “Cantidad por unidad”.
+            </div>
+<div class="pCatRow" style="margin-top:10px;">
+<input class="input" id="ingUnitItemQty" placeholder="Cantidad por unidad (opcional)">
+<select class="input" id="ingUnitItemQtyType">
+<option value="">—</option>
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="m">m</option>
+</select>
+</div>
+<div class="pSmallMeta" id="ingAddMsg" style="margin-top:10px; color:#7a2b00;"></div>
+</div>
+<div class="pCatBox">
+<div class="k" style="font-weight:950;">Eliminar ingrediente</div>
+<div class="hint" style="margin-top:6px;">Eliminación segura: se bloqueará si el ingrediente está usado en RECETAS.</div>
+<div class="pCatRow" style="margin-top:10px;">
+<select class="input" id="ingSelect"></select>
+<button class="btn" id="btnDelIng">Eliminar</button>
+</div>
+<div class="pSmallMeta" id="ingDelMsg" style="margin-top:10px; color:#7a2b00;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL: confirmar eliminación de ingrediente -->
+<div class="modalOverlay hidden" id="ingConfirmBack">
+<div class="modal">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">⚠️ Confirmar eliminación</div>
+<div class="modalSub" style="margin-top:4px;">Esta acción eliminará el ingrediente de <b>COSTOS_INGREDIENTES</b> e <b>INVENTARIO</b>.</div>
+</div>
+</div>
+<div class="modalBody">
+<div class="pCatBox" style="margin:0;">
+<div class="k" style="font-weight:950;">Ingrediente</div>
+<div id="ingConfirmName" style="margin-top:6px; font-weight:900;"></div>
+<div class="hint confirmHint" id="ingConfirmWarn">Si el ingrediente está usado en RECETAS, la eliminación será bloqueada automáticamente.</div>
+<div class="pSmallMeta" id="ingConfirmCountdown" style="margin-top:10px; color:#7a2b00;"></div>
+<div class="confirmBtns" style="margin-top:12px;">
+<button class="btn secondary" id="ingConfirmCancel">Cancelar</button>
+<button class="btn" disabled id="ingConfirmGo">Eliminar</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL: administrar catálogos -->
+<div class="modalOverlay hidden" id="catModalBack">
+<div class="modal" style="width:min(900px, 96vw);">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">⚙️ Tiendas y Marcas</div>
+<div class="modalSub" style="margin-top:4px;">Estas opciones alimentan los selects de Marca/Tienda.</div>
+</div>
+<button aria-label="Cerrar" class="iconBtn costsModalClose" id="catCloseX" type="button">×</button>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pCatGrid">
+<div class="pCatBox">
+<div class="k" style="font-weight:950;">Tiendas</div>
+<div class="hint" style="margin-top:6px;">Agrega o elimina tiendas.</div>
+<div class="pCatRow">
+<input class="input" id="catStoreNew" placeholder="Nueva tienda…">
+<button class="btn secondary" id="btnAddStore">Agregar</button>
+</div>
+<div class="pCatRow" style="margin-top:10px;">
+<select class="input" id="catStores"></select>
+<button class="btn" id="btnDelStore">Eliminar</button>
+</div>
+</div>
+<div class="pCatBox">
+<div class="k" style="font-weight:950;">Marcas</div>
+<div class="hint" style="margin-top:6px;">Agrega o elimina marcas.</div>
+<div class="pCatRow">
+<input class="input" id="catBrandNew" placeholder="Nueva marca…">
+<button class="btn secondary" id="btnAddBrand">Agregar</button>
+</div>
+<div class="pCatRow" style="margin-top:10px;">
+<select class="input" id="catBrands"></select>
+<button class="btn" id="btnDelBrand">Eliminar</button>
+</div>
+</div>
+</div>
+<div class="pErr" id="catErr"></div>
+</div>
+</div>
+</div>
+<!-- MODAL: confirmar compras -->
+<div class="modalOverlay hidden" id="confirmBack">
+<div class="modal" style="width:min(820px, 96vw);">
+<div class="modalHeader">
+<div>
+<div class="modalTitle" style="font-weight:950;">✅ Confirmar compras</div>
+<div class="modalSub" style="margin-top:4px;">Se sumará al inventario usando la última presentación guardada.</div>
+</div>
+<button aria-label="Cerrar" class="iconBtn costsModalClose" id="btnConfirmClose" type="button">×</button>
+</div>
+<div class="modalBody" style="padding:14px;">
+<div class="pConfirmTotal">
+<div>Total estimado</div>
+<div class="pConfirmValue" id="confirmTotal">$0</div>
+</div>
+<div class="pConfirmList" id="confirmList"></div>
+<div class="pModalActions">
+<button class="btn" id="btnConfirmCancel">Volver</button>
+<button class="btn primary" id="btnConfirmGo">Confirmar y registrar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- LOADING overlay (pantalla completa) -->
+<div id="loadingBack" class="amLoadingOverlay hidden" aria-hidden="true">
+  <div class="amLoadingBackdropFx" aria-hidden="true"></div>
+  <div class="amLoadingCard">
+    <div class="amLoadingRow">
+      <div class="amSpinner"></div>
+      <div>
+        <div id="loadingTitle" class="amLoadingTitle">Cargando…</div>
+        <div id="loadingSub" class="amLoadingSub">Un momento.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Historial de compras -->
+<button class="historyFab hidden" id="btnHistoryFab" type="button" aria-label="Ver historial de compras" title="Ver historial de compras">🕘</button>
+
+<div class="modalOverlay hidden" id="historyBack">
+  <div class="modal historyModal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+    <div class="modalHeader historyModalHeader">
+      <div>
+        <div class="modalTitle" id="historyModalTitle">Historial de compras</div>
+        <div class="modalSub">Consulta las compras registradas para ingredientes y su trazabilidad.</div>
+      </div>
+      <div class="historyModalActions">
+        <button class="btn secondary" id="btnHistoryRefresh" type="button">Actualizar</button>
+        <button class="btn secondary costsModalClose" id="historyCloseX" type="button" aria-label="Cerrar">×</button>
+      </div>
+    </div>
+    <div class="modalBody">
+      <div class="pSmallMeta" id="purchaseHistoryMeta" style="margin-top:0;">Cargando historial…</div>
+      <div class="purchaseHistoryList" id="purchaseHistoryList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="kitchen-costs.js?v=30-costs-mobile-ux"></script>
+<script src="costs.js?v=20260515-unit-cost-recipes-db-sync-v41"></script>
+<script src="experience.js?v=20260918" defer></script></body>
+</html>

@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#401102">
+  <title>AMARED · Un pequeño antojo, un gran momento</title>
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="assets/Logo-Amared.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/Logo-Isotipo-Amared.svg" as="image" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css?v=20260602-private-access-v46">
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260918"><script src="config.js?v=20260918"></script><script src="runtime.js?v=20260918"></script></head>
+<body class="launch-checking amaredV2 storefront">
+  <a class="skipLink" href="#inicio">Saltar al contenido</a><section id="launchGate" class="launchGate hidden" aria-live="polite">
+    <div class="launchGateShell">
+      <div class="launchGateCard">
+        <img class="launchGateLogo" src="assets/Logo-Amared.svg" alt="AMARED Postres">
+        <div class="launchGateKicker">Inauguración AMARED</div>
+        <h1>La página aún no se encuentra disponible</h1>
+        <p>Estamos preparando la apertura oficial. Únete al canal de WhatsApp para enterarte cuando inicie la inauguración.</p>
+
+        <div class="launchCountdown" aria-label="Cuenta regresiva para la inauguración">
+          <div><strong id="launchDays">00</strong><span>Días</span></div>
+          <div><strong id="launchHours">00</strong><span>Horas</span></div>
+          <div><strong id="launchMinutes">00</strong><span>Min</span></div>
+          <div><strong id="launchSeconds">00</strong><span>Seg</span></div>
+        </div>
+
+        <form id="launchSignupForm" class="launchSignupForm launchSignupFormChannelOnly">
+          <button id="launchChannelBtn" class="btn primary launchChannelBtn" type="button">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Unirme al canal de WhatsApp
+          </button>
+          <div id="launchSignupStatus" class="launchSignupStatus" role="status">Recibe novedades, fecha de apertura y disponibilidad del combo inaugural.</div>
+        </form>
+
+        <div class="launchGateFoot">
+          Apertura oficial: <strong>12 de junio</strong> · Combo inaugural por <strong>$22.900</strong> por tiempo limitado.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="topbarInner">
+        <a class="brand brandLink" href="#inicio" aria-label="Ir al inicio AMARED">
+          <img class="brandLogo" src="assets/Logo-Amared.svg" alt="AMARED Postres">
+        </a>
+        <button id="btnIndexAdminDesktopHub" class="btn amBtnSoft indexAdminTopbarAction hidden" type="button" aria-label="Volver al panel">Panel</button>
+      <nav class="storeNav" aria-label="Navegación principal"><a href="#postres">Nuestros postres</a><a href="#opiniones">Opiniones</a><button type="button" data-checkout-open class="navCart">Mi pedido <span id="navCartCount">0</span></button></nav></div>
+    </header>
+
+    <div id="privateOrderBanner" class="privateOrderBanner hidden" role="status">
+      <div>
+        <strong>Acceso interno activo</strong>
+        <span>La página pública sigue bloqueada hasta la inauguración. Este modo es solo para registrar pedidos internos.</span>
+      </div>
+      <button id="btnPrivateOrderExit" class="privateOrderExit" type="button">Salir</button>
+    </div>
+
+    <main class="container amIndex" id="inicio">
+      <section class="hero heroPremium atelierHero">
+  <div class="atelierHeroCopy"><p class="eyebrow">POSTRES ARTESANALES · IBAGUÉ</p>
+    <h1>Un pequeño antojo.<br><span>Un gran momento.</span></h1>
+    <p>Sabores para disfrutar despacio, compartir y repetir. Elige tu favorito; nosotros ponemos el toque dulce.</p>
+    <a class="btn primary heroCta" href="#postres">Elegir mis postres <span aria-hidden="true">↗</span></a>
+    <div class="heroDeliveryNote"><span aria-hidden="true">♡</span> A domicilio o para recoger · Confirmación por WhatsApp</div>
+  </div>
+  <div class="atelierHeroPhoto"><img src="assets/cheesecake.webp" alt="Postre artesanal de AMARED" width="1104" height="1104" fetchpriority="high" decoding="async"><div class="photoCaption">Hecho para endulzar<br><strong>tu día.</strong></div></div>
+</section>
+<nav class="purchaseJourney" aria-label="Cómo hacer tu pedido">
+  <a href="#postres"><span>01</span><div><strong>Elige tu antojo</strong><small>Agrega tus postres favoritos</small></div></a>
+  <button type="button" data-checkout-open><span>02</span><div><strong>Cuéntanos dónde</strong><small>Domicilio o recogida</small></div></button>
+  <button type="button" data-checkout-open><span>03</span><div><strong>Confirma por WhatsApp</strong><small>Acordamos pago y entrega</small></div></button>
+</nav><section class="layout layoutPremium">
+        <section class="card cardProducts" id="postres">
+          <div class="sectionHead">
+            <div>
+              <div class="sectionKicker">HECHOS CON CARIÑO</div>
+              <h2 class="cardTitle">¿Cuál se te antoja hoy?</h2>
+            </div>
+          <p class="catalogLead">Porciones individuales. Todo el sabor de AMARED.</p></div>
+
+          <div id="inauguralPromoBanner" class="inauguralPromoBanner hidden" aria-live="polite">
+            <div class="promoCopy">
+              <span class="promoKicker">Semana inaugural</span>
+              <strong>Combo inaugural por tiempo limitado</strong>
+              <small>Incluye los 2 postres, detalle especial y domicilio gratis. Disponible hasta agotar existencias.</small>
+            </div>
+            <div class="promoCountdown" aria-label="Tiempo restante del combo inaugural">
+              <div><strong id="promoDays">00</strong><span>Días</span></div>
+              <div><strong id="promoHours">00</strong><span>Horas</span></div>
+              <div><strong id="promoMinutes">00</strong><span>Min</span></div>
+              <div><strong id="promoSeconds">00</strong><span>Seg</span></div>
+            </div>
+          </div>
+
+          <div id="products" class="products"></div>
+        </section>
+
+        <section class="card cardOrder" id="pedido">
+          <div class="sectionHead orderHead">
+            <div>
+              <div class="sectionKicker">TU MOMENTO DULCE</div>
+              <h2 class="cardTitle">Mi pedido</h2>
+            </div>
+            <div class="sectionPill sectionPillAccent">Paso a paso</div>
+          </div>
+
+          <div class="summaryRow">
+            <div class="summaryBox">
+              <div class="summaryLabel">Unidades</div>
+              <div id="totalUnits" class="summaryValue">0</div>
+            </div>
+
+            <div class="subtotalBox">
+              <div class="summaryLabel">Subtotal</div>
+              <div class="subtotalBig">$<span id="subtotal">0</span></div>
+              <div class="muted small">El domicilio se cotiza por WhatsApp antes de pagar.</div>
+            </div>
+          </div>
+
+          <div class="miniCard cartMiniCard">
+            <div class="miniCardTop">
+              <img class="miniIcon" src="assets/Logo-Isotipo-Amared.svg" alt="AMARED icono">
+              <div class="miniTitle">Resumen del pedido</div>
+            </div>
+            <div id="cartSummary" class="cartSummary muted">Aún no has seleccionado postres.</div>
+          </div>
+
+          <details id="checkoutDetails" class="checkoutDetails"><summary><span>2</span> Datos y entrega <b aria-hidden="true">＋</b></summary><p class="checkoutLead">Solo necesitamos estos datos para preparar tu pedido.</p><div class="form">
+            <div id="checkoutError" class="checkoutError" role="alert" hidden></div><div class="hint">Completa solo lo esencial para registrar tu pedido. Los campos con <span class="req">*</span> son obligatorios.</div>
+
+            <div class="formGrid formGrid2">
+              <div class="field">
+                <label class="label" for="name">Nombre <span class="req">*</span></label>
+                <input id="name" class="input" type="text" placeholder="Ej: Cristian" autocomplete="name" maxlength="80">
+              </div>
+
+              <div class="field">
+                <label class="label" for="phone">Número de teléfono <span class="req">*</span></label>
+                <input id="phone" class="input" type="tel" placeholder="Ej: 3028473086" autocomplete="tel" inputmode="tel" maxlength="18">
+              </div>
+            </div>
+
+            <div class="field">
+              <label id="addressLabel" class="label" for="address">Dirección <span class="req">*</span></label>
+              <input id="address" class="input" type="text" placeholder="Ej: Calle 53, número 8-2, Ibagué, Tolima" autocomplete="street-address" maxlength="250">
+              <div id="addressHint" class="muted small addressHint hidden">Este campo cambia según el tipo de entrega que elijas.</div>
+            </div>
+
+            <div id="neighborhoodField" class="field neighborhoodField">
+              <label id="neighborhoodLabel" class="label" for="neighborhood">Barrio o sector <span class="req">*</span></label>
+              <div class="neighborhoodCombo">
+                <input id="neighborhood" class="input" type="text" placeholder="Ej: Jordán, Centro, El Salado" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="neighborhoodSuggest" aria-autocomplete="list" maxlength="100">
+                <button id="neighborhoodToggle" class="neighborhoodToggle" type="button" aria-label="Mostrar barrios disponibles" aria-controls="neighborhoodSuggest">⌄</button>
+              </div>
+              <div id="neighborhoodSuggest" class="neighborhoodSuggest hidden" role="listbox" aria-label="Barrios sugeridos"></div>
+              <datalist id="neighborhoodOptions"></datalist>
+              <div id="neighborhoodHint" class="muted small neighborhoodHint">Busca tu barrio en el listado. Si no aparece, puedes escribirlo manualmente para revisar la entrega.</div>
+            </div>
+
+            <div class="miniCard deliveryCard">
+              <div class="miniCardTop">
+                <div class="miniTitle">Entrega y ubicación</div>
+              </div>
+              <div class="muted small deliveryIntro">Selecciona la opción que mejor te funcione. La opción predeterminada te permite escribir una dirección de referencia y completar el pedido fácilmente por WhatsApp.</div>
+
+              <div class="locationOptions deliveryTiles">
+                <label class="radioRow deliveryTile">
+                  <input type="radio" name="locMethod" value="whatsapp" checked>
+                  <span class="deliveryTileCopy">
+                    <strong>Enviar ubicación por WhatsApp</strong>
+                    <small>Escribe una dirección de referencia aquí y en el chat te indicaremos cómo compartir tu ubicación.</small>
+                  </span>
+                </label>
+
+                <div id="waLocBlock" class="waLocBlock muted small tileDetail">
+                  <div class="waLocCopy">Escribe tu dirección o punto de referencia en este formulario. Cuando se abra WhatsApp, podremos guiarte para compartir la ubicación exacta si lo necesitas.</div>
+                  <div class="tutorialHelper">
+                    <strong>Video corto · 27 s</strong>
+                    <span>Mira cómo compartir tu ubicación exacta por WhatsApp sin salir del proceso de pedido.</span>
+                  </div>
+                  <div class="tutorialAction">
+                    <button id="btnWaTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
+                  </div>
+                </div>
+
+                <label class="radioRow deliveryTile">
+                  <input type="radio" name="locMethod" value="maps">
+                  <span class="deliveryTileCopy">
+                    <strong>Enviar link de Google Maps</strong>
+                    <small>La opción más precisa para ubicar tu domicilio.</small>
+                  </span>
+                </label>
+
+                <div id="mapsBlock" class="mapsBlock tileDetail">
+                  <div class="mapsRow">
+                    <input id="maps" class="input" type="url" placeholder="Pega aquí el link de tu ubicación">
+                    <button id="btnOpenMaps" class="btn secondary" type="button">Abrir Maps</button>
+                  </div>
+                  <div class="muted small">Abre Google Maps, toca compartir, copia el enlace y pégalo aquí.</div>
+                  <div class="tutorialHelper">
+                    <strong>Video corto · 34 s</strong>
+                    <span>Te mostramos dónde copiar el enlace de Google Maps y cómo pegarlo correctamente aquí.</span>
+                  </div>
+                  <div class="tutorialAction">
+                    <button id="btnMapsTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
+                  </div>
+                </div>
+
+                <label class="radioRow deliveryTile">
+                  <input type="radio" name="locMethod" value="pickup">
+                  <span class="deliveryTileCopy">
+                    <strong>Recoger el pedido presencialmente</strong>
+                    <small>Tu pedido quedará marcado como recogida presencial.</small>
+                  </span>
+                </label>
+
+                <div id="pickupBlock" class="pickupBlock hidden tileDetail">
+                  <div class="pickupBox">
+                    <div class="pickupTitle">Recogida presencial</div>
+                    <div class="muted small">No será necesario escribir dirección. El pedido se registrará como <strong>recogida presencial</strong>.</div>
+
+                    <details class="pickupInfoDetails">
+                      <summary>Más información sobre la recogida presencial</summary>
+                      <div class="pickupInfoBody">
+                        <div class="muted small">Para confirmar tu pedido por recogida presencial, solicitamos un anticipo de reserva del <strong>40%</strong> del valor total. Este valor se abona al pedido y el saldo restante se paga al momento de reclamarlo en el horario de entrega.</div>
+
+                        <div id="pickupPaymentPreview" class="pickupPaymentPreview">
+                          <div class="pickupPaymentLine">
+                            <span>Total actual del pedido</span>
+                            <strong id="pickupPreviewTotal">$0</strong>
+                          </div>
+                          <div class="pickupPaymentLine accent">
+                            <span>Anticipo a confirmar por WhatsApp</span>
+                            <strong id="pickupPreviewReserve">$0</strong>
+                          </div>
+                          <div class="pickupPaymentLine">
+                            <span>Saldo restante al reclamar</span>
+                            <strong id="pickupPreviewBalance">$0</strong>
+                          </div>
+                        </div>
+
+                        <div class="muted small">El valor exacto también se enviará automáticamente en el mensaje de WhatsApp cuando confirmes el pedido.</div>
+                      </div>
+                    </details>
+
+                    <div id="pickupVideoHint" class="tutorialHelper">
+                      <strong>Video corto · 37 s</strong>
+                      <span>Mira cómo funciona la recogida presencial, el punto de encuentro y la entrega del pedido.</span>
+                    </div>
+                    <div class="pickupActions">
+                      <button id="btnPickupTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <details class="orderExtras"><summary>Agregar una nota o correo (opcional)</summary><div class="field">
+              <label class="label" for="email">Correo electrónico (opcional)</label>
+              <input id="email" class="input" type="email" placeholder="Ej: correo@dominio.com" autocomplete="email" maxlength="120">
+              <div class="muted small">Podrías recibir notificaciones del pedido o información relacionada con AMARED.</div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="notes">Notas (opcional)</label>
+              <textarea id="notes" class="textarea" rows="3" placeholder="Ej: Portería / Torre 2 / Sin canela" maxlength="500"></textarea>
+            </div>
+
+            </details><div class="waOptWrap">
+              <label class="checkRow">
+                <input id="waOptIn" type="checkbox">
+                <span>Autorizo avisos de este pedido por WhatsApp.</span>
+              </label>
+              <div id="waOptHint" class="waOptHint hidden">Puedes autorizar los avisos del pedido. Tu selección es opcional y puedes cambiarla.</div>
+            </div>
+
+            <button id="btnWhatsApp" class="btn primary btnOrderMain" type="button">3 · Revisar mi pedido →</button>
+
+            <p class="checkoutFinePrint">Revisarás el resumen antes de registrarlo. El pago se acuerda en el chat.</p><div id="status" class="status hidden" aria-hidden="true"></div>
+          </div>
+        </details></section>
+      </section>
+
+      <section id="indexAdminSection" class="card indexAdminSection hidden" aria-label="Configuración admin de la página de pedidos">
+        <div class="sectionHead reviewsHead">
+          <div>
+            <div class="sectionKicker">Modo administrador</div>
+            <h2 class="cardTitle">Página de pedidos</h2>
+          </div>
+          <div class="sectionHeadActions">
+            <button id="btnIndexAdminGoOpiniones" class="btn secondary indexAdminDesktopOpinions" type="button">Opiniones</button>
+            <div class="sectionPill sectionPillAccent">Admin</div>
+          </div>
+        </div>
+
+        <div class="indexAdminIntro">Desde aquí puedes actualizar los precios visibles del catálogo. Las respuestas a opiniones se gestionan en el bloque de opiniones que aparece más abajo.</div>
+
+        <div class="indexAdminGrid isSingle">
+          <div class="miniCard indexAdminCard">
+            <div class="miniCardTop">
+              <img class="miniIcon" src="assets/Logo-Isotipo-Amared.svg" alt="AMARED">
+              <div class="miniTitle">Precios del catálogo</div>
+            </div>
+            <div id="indexAdminPriceList" class="indexAdminPriceList"></div>
+            <div class="row indexAdminActions">
+              <button id="btnIndexAdminSavePrices" class="btn primary" type="button">Guardar precios</button>
+              <button id="btnIndexAdminResetPrices" class="btn secondary" type="button">Restablecer</button>
+            </div>
+            <div id="indexAdminStatus" class="muted small indexAdminStatus"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card cardReviews" id="opiniones">
+        <div class="sectionHead reviewsHead">
+          <div>
+            <div class="sectionKicker">Confianza</div>
+            <h2 class="cardTitle">Opiniones</h2>
+          </div>
+          <button id="btnOpenReviewModal" class="btn secondary" type="button">Dejar mi opinión</button>
+        </div>
+
+        <div class="reviewsSummary">
+          <div class="reviewsAvg">
+            <div class="avgNum" id="reviewsAvg">—</div>
+            <div class="avgStars" id="reviewsAvgStars" aria-hidden="true"></div>
+            <div class="muted small"><span id="reviewsCount">0</span> opiniones</div>
+          </div>
+          <div class="muted small reviewsHint">
+            Solo se publican opiniones de pedidos <b>entregados</b>. Para dejar tu opinión, revisa el mensaje de WhatsApp del pedido y escribe los <b>últimos 4 dígitos</b> del ID.
+          </div>
+        </div>
+
+        <div id="reviewsList" class="reviewsList"></div>
+        <div id="reviewsInlineLoading" class="reviewsInlineLoading">
+          <div class="spinner" aria-hidden="true"></div>
+          <div class="muted small">Cargando opiniones...</div>
+        </div>
+
+        <div class="row" style="justify-content:flex-end; gap:10px; margin-top:12px; flex-wrap:wrap;">
+          <button id="btnMoreReviews" class="btn secondary" type="button">Ver más</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="tutorialModal" class="modalOverlay tutorialModalOverlay hidden" aria-hidden="true">
+    <div class="modal tutorialModal" role="dialog" aria-modal="true" aria-labelledby="tutorialModalTitle">
+      <div class="modalHeader tutorialModalHeader">
+        <div>
+          <div class="tutorialModalKicker">Tutorial AMARED</div>
+          <h3 id="tutorialModalTitle" class="modalTitle">Tutorial</h3>
+        </div>
+        <button id="btnCloseTutorial" class="iconBtn" type="button" aria-label="Cerrar tutorial">✕</button>
+      </div>
+      <div class="modalBody tutorialModalBody">
+        <p id="tutorialModalText" class="tutorialModalText"></p>
+        <div class="tutorialVideoShell">
+          <video id="tutorialVideo" class="tutorialVideo" controls playsinline preload="none"></video>
+        </div>
+        <div class="tutorialModalHint">Puedes cerrar el tutorial cuando quieras y continuar tu pedido exactamente donde estabas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modalOverlay hidden" aria-hidden="true">
+    <div class="modal">
+      <div class="modalHeader">
+        <h3 class="modalTitle">¿Todo se ve bien?</h3>
+        <button id="btnCloseModal" class="iconBtn" type="button" aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="modalBody">
+        <div id="modalItems" class="modalItems"></div>
+
+        <div id="modalCustomerSummary" class="modalCustomerSummary"></div><div class="modalTotals">
+          <div class="modalTotalLine">
+            <span class="muted">Unidades</span>
+            <strong id="modalUnits">0</strong>
+          </div>
+          <div class="modalTotalLine">
+            <span class="muted">Subtotal</span>
+            <strong class="modalSubtotal">$<span id="modalSubtotal">0</span></strong>
+          </div>
+
+          <div id="modalPickupBreakdown" class="modalPickupBreakdown hidden">
+            <div class="modalTotalLine compact">
+              <span class="muted">Anticipo de reserva (40%)</span>
+              <strong id="modalPickupReserve">$0</strong>
+            </div>
+            <div class="modalTotalLine compact">
+              <span class="muted">Saldo restante al reclamar</span>
+              <strong id="modalPickupBalance">$0</strong>
+            </div>
+          </div>
+
+          <div class="muted small">La entrega se confirma según el método que seleccionaste.</div>
+        </div>
+      </div>
+
+      <div class="modalFooter">
+        <div id="modalStatus" class="muted small" style="flex:1; align-self:center; display:none;"></div>
+        <button id="btnSendWhatsApp" class="btn primary" type="button">Registrar mi pedido</button>
+      </div>
+
+      <div id="fallbackWrap" class="helpBar" style="margin-top:12px;">
+        <details id="fallbackDetails" class="helpDetails">
+          <summary>Ayuda al cliente</summary>
+
+          <div class="muted small" style="margin-top:10px;">
+            Si tuviste algún problema al abrir WhatsApp o al enviar el pedido, copia el mensaje y pégalo en el chat para confirmar tu pedido.
+          </div>
+
+          <div class="muted small" style="margin-top:8px;">
+            <b>Número:</b> <span id="waNumberText"></span>
+          </div>
+
+          <div class="row" style="gap:10px; margin-top:10px; flex-wrap:wrap;">
+            <button id="btnOpenChat" class="btn secondary" type="button">Abrir chat</button>
+            <button id="btnCopyMessage" class="btn secondary" type="button">Copiar mensaje</button>
+          </div>
+
+          <textarea id="modalMessage" class="textarea" rows="7" readonly style="margin-top:10px; display:none;"></textarea>
+
+          <div class="muted small" style="margin-top:8px;">
+            Copia, pega en WhatsApp y envía el mensaje.
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div id="reviewModal" class="modalOverlay hidden" aria-hidden="true">
+    <div class="modal">
+      <div class="modalHeader">
+        <h3 class="modalTitle">Deja tu opinión</h3>
+        <button id="btnCloseReview" class="iconBtn" type="button" aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="muted small">
+          Para validar tu pedido, revisa el mensaje de WhatsApp donde aparece el ID del pedido y escribe solo los <b>últimos 4 dígitos</b> (ej: <b>1234</b>). Solo se aceptan opiniones de pedidos con estado <b>Enviado</b>.
+        </div>
+
+        <div class="formRow" style="margin-top:12px;">
+          <label class="label" for="reviewLast4">Últimos 4 dígitos del ID *</label>
+          <input id="reviewLast4" class="input" inputmode="numeric" maxlength="4" placeholder="1234">
+        </div>
+
+        <div class="formRow" style="margin-top:12px;">
+          <div class="label">Calificación *</div>
+          <div id="reviewStars" class="starRow" role="radiogroup" aria-label="Calificación">
+            <button class="starBtn" type="button" data-value="1" aria-label="1 estrella">★</button>
+            <button class="starBtn" type="button" data-value="2" aria-label="2 estrellas">★</button>
+            <button class="starBtn" type="button" data-value="3" aria-label="3 estrellas">★</button>
+            <button class="starBtn" type="button" data-value="4" aria-label="4 estrellas">★</button>
+            <button class="starBtn" type="button" data-value="5" aria-label="5 estrellas">★</button>
+          </div>
+        </div>
+
+        <div class="formRow" style="margin-top:12px;">
+          <label class="label" for="reviewName">Nombre del pedido</label>
+          <input id="reviewName" class="input" maxlength="80" placeholder="Se cargará automáticamente con tu pedido" readonly>
+          <div id="reviewNameStatus" class="muted small reviewIdentityStatus">Escribe los 4 dígitos y cargaremos el nombre del pedido.</div>
+        </div>
+
+        <div class="formRow" style="margin-top:12px;">
+          <label class="label" for="reviewComment">Tu opinión *</label>
+          <textarea id="reviewComment" class="textarea" rows="5" maxlength="300" placeholder="Cuéntanos cómo fue tu experiencia…"></textarea>
+          <div class="muted small" id="reviewCharCount">0/300</div>
+        </div>
+      </div>
+
+      <div class="modalFooter">
+        <button id="btnSubmitReview" class="btn" type="button">Enviar opinión</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="alertOverlay" class="alertOverlay hidden" aria-hidden="true">
+    <div class="alertBox" role="alertdialog" aria-modal="true" aria-labelledby="alertTitle">
+      <div id="alertTitle" class="alertTitle">Aviso</div>
+      <div id="alertText" class="alertText"></div>
+
+      <div id="alertHelpWrap" class="alertHelpWrap hidden">
+        <details id="alertHelpDetails" class="helpDetails">
+          <summary>No abrió WhatsApp</summary>
+
+          <div class="muted small" style="margin-top:10px;">
+            Copia el mensaje y pégalo en WhatsApp para confirmar tu pedido.
+          </div>
+
+          <div class="muted small" style="margin-top:8px;">
+            <b>Número:</b> <span id="alertWaNumberText"></span>
+          </div>
+
+          <div class="row" style="gap:10px; margin-top:10px; flex-wrap:wrap;">
+            <button id="btnAlertOpenChat" class="btn secondary" type="button">Abrir chat</button>
+            <button id="btnAlertCopyMessage" class="btn secondary" type="button">Copiar mensaje</button>
+          </div>
+
+          <textarea id="alertHelpMessage" class="textarea" rows="6" readonly style="margin-top:10px; display:none;"></textarea>
+
+          <div class="muted small" style="margin-top:8px;">
+            Copia, pega en WhatsApp y envía el mensaje.
+          </div>
+        </details>
+      </div>
+
+      <div class="alertFooter">
+        <button id="btnAlertOk" class="btn primary" type="button">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="orderLoadingOverlay" class="amOrderLoadingOverlay hidden" aria-hidden="true" style="display:none;">
+    <div class="amOrderLoadingBackdropFx" aria-hidden="true"></div>
+    <div class="amOrderLoadingCard" role="status" aria-live="polite">
+      <img class="amOrderLoadingBrand" src="assets/Logo-Amared.svg" alt="AMARED">
+      <div class="amOrderLoadingVisual" aria-hidden="true">
+        <div class="amOrderLoadingHalo"></div>
+        <div class="amOrderLoadingLogoWrap">
+          <img class="amOrderLoadingIsoImg" src="assets/Logo-Isotipo-Amared.svg" alt="">
+        </div>
+      </div>
+      <div class="amOrderLoadingCopy">
+        <div class="amOrderLoadingKicker">AMARED está preparando tu pedido</div>
+        <div id="orderLoadingText" class="amOrderLoadingTitle">Registrando pedido...</div>
+        <div id="orderLoadingSub" class="amOrderLoadingSub">Estamos conectando tu pedido con AMARED.</div>
+      </div>
+      <div class="amOrderLoadingMeta">
+        <span id="orderLoadingStep" class="amOrderLoadingStep">Iniciando</span>
+        <strong id="orderLoadingPercent" class="amOrderLoadingPercent">0%</strong>
+      </div>
+      <div class="amOrderLoadingTrack" aria-hidden="true"><span id="orderLoadingBar" class="amOrderLoadingBar"></span></div>
+    </div>
+  </div>
+
+  <div id="adminReviewsModal" class="modalOverlay hidden" aria-hidden="true">
+    <div class="modal" style="max-width:520px;">
+      <div class="modalHeader">
+        <h3 class="modalTitle">Modo admin</h3>
+        <button id="btnCloseAdminReviewsModal" class="iconBtn" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="modalBody">
+        <div class="muted small">Ingresa el PIN de admin para responder opiniones.</div>
+        <label class="label" style="margin-top:12px;" for="adminPinReviews">PIN</label>
+        <input id="adminPinReviews" class="input" inputmode="numeric" maxlength="12" placeholder="PIN">
+        <div id="adminReviewsErr" class="muted small" style="margin-top:8px; color:#b00020;"></div>
+      </div>
+      <div class="modalFooter">
+        <button id="btnAdminLoginReviews" class="btn primary" type="button">Ingresar</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="btnOpinionesTop" class="backToTop hidden" type="button" aria-label="Volver al inicio">↑ Inicio</button>
+
+  <div id="indexAdminMobileBar" class="indexAdminMobileBar hidden" aria-label="Acciones de la página de pedidos admin">
+    <button id="btnIndexAdminBarOpiniones" class="indexAdminMobileBtn isIconOnly" type="button" aria-label="Ir a opiniones"><span class="ico">💬</span></button>
+    <div class="indexAdminMobileCenter">
+      <button id="btnIndexAdminBarTools" class="indexAdminMobilePill" type="button">Precios</button>
+    </div>
+    <button id="btnIndexAdminBarHub" class="indexAdminMobileBtn isIconOnly" type="button" aria-label="Volver al panel"><span class="ico">⌂</span></button>
+  </div>
+
+  <script src="routes-data.js?v=20260513-barrios-fuzzy"></script>
+  <script src="app.js?v=20260918-tutoriales-v17" defer></script>
+<footer class="atelierFooter"><div><img src="assets/Logo-Amared.svg" width="142" height="54" alt="AMARED"><p>Un detalle dulce, un momento especial.</p></div><nav aria-label="Redes y contacto"><a href="https://www.instagram.com/amaredpostres" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.tiktok.com/@amaredpostres" target="_blank" rel="noopener noreferrer">TikTok ↗</a><a href="https://wa.me/573028473086" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a></nav><a href="hub.html" class="teamAccess">Acceso del equipo</a></footer>
+<div class="mobileCartDock" id="mobileCartDock" hidden><div><small>Tu pedido · <span id="mobileCartUnits">0</span> postres</small><strong id="mobileCartTotal">$0</strong></div><button class="btn primary" type="button" data-checkout-open>Ver mi pedido →</button></div>
+<div id="uxToast" class="uxToast" role="status" aria-live="polite"></div><script src="experience.js?v=20260918" defer></script></body>
+</html>

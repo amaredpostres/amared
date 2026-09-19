@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <script>
+    try {
+      if (new URLSearchParams(window.location.search).get("hub") === "1") {
+        document.documentElement.classList.add("hubBoot");
+      } else {
+        document.documentElement.classList.add("hubReady");
+      }
+    } catch (_e) {
+      document.documentElement.classList.add("hubReady");
+    }
+  </script>
+  <style>
+    html.hubBoot body { opacity: 1; }
+    html.hubReady body { opacity: 1; transition: opacity .12s ease; }
+    html.hubBoot body { overflow: hidden; }
+    .amHubBootOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 130000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(64,17,2,.25);
+      backdrop-filter: blur(6px);
+      box-sizing: border-box;
+    }
+    html.hubBoot .amHubBootOverlay{ display:flex; }
+    html.hubReady .amHubBootOverlay{ display:none; }
+    .amHubBootCard{
+      width: fit-content;
+      max-width: min(420px, calc(100vw - 32px));
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(64,17,2,.12);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+      box-sizing: border-box;
+    }
+    .amHubBootRow{
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .amHubBootRow > div:last-child{ min-width:0; }
+    .amHubBootSpinner{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(64,17,2,.18);
+      border-top-color: rgba(64,17,2,.70);
+      animation: amHubBootSpin 1s linear infinite;
+      flex: 0 0 auto;
+    }
+    .amHubBootTitle{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.08;
+      color:#401102;
+    }
+    .amHubBootSub{
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: rgba(64,17,2,.72);
+    }
+    @media (max-width: 560px){
+      .amHubBootCard{
+        max-width: calc(100vw - 28px);
+        padding: 14px 16px;
+      }
+      .amHubBootTitle{ font-size: 16px; }
+      .amHubBootSub{ font-size: 12.5px; }
+    }
+    @keyframes amHubBootSpin{ to{ transform: rotate(360deg); } }
+  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AMARED | Pagos</title>
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="styles.css?v=20260513-admin-location-v27">
+
+  <style>
+    .hidden { display:none !important; }
+
+    /* LOGIN */
+    .loginBox{
+      max-width:420px; margin:60px auto; padding:20px;
+      border-radius:18px; background:var(--paper);
+      border:1px solid var(--border); box-shadow:var(--shadow);
+    }
+    .loginBox h2{ text-align:center; margin:0 0 6px; }
+    .loginBox p{ text-align:center; font-size:14px; opacity:.7; margin:0 0 16px; }
+    .field{ display:grid; gap:6px; margin-bottom:12px; }
+    .mutedSmall{ opacity:.72; font-weight:800; font-size:13px; }
+
+    .loginActions{ display:flex; gap:10px; }
+    .btnLinkLike{ text-decoration:none; display:flex; align-items:center; justify-content:center; }
+    .loginActions .btn{ flex:1; }
+    @media (max-width:520px){
+      .loginActions{ flex-direction:column; }
+      .loginActions .btn{ width:100%; }
+    }
+
+
+    /* PANEL */
+    .panelTop{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px; flex-wrap:wrap; margin-bottom:10px;
+    }
+    .operatorLine{ font-size:14px; }
+    .rightBtns{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+    .iconBtn{
+      width:44px; height:44px; border-radius:14px;
+      border:1px solid var(--border); background:rgba(255,255,255,.75);
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; cursor:pointer;
+      box-shadow: 0 8px 18px rgba(64,17,2,.06);
+    }
+    .iconBtn:active{ transform: translateY(1px); }
+
+    .list{ display:grid; gap:10px; }
+
+    .adminIndexToolsCard{ margin-top:14px; }
+    .adminIndexToolsLead{ color:rgba(64,17,2,.72); font-weight:800; line-height:1.45; margin:0 0 12px; }
+    .adminIndexToolsRows{ display:grid; gap:10px; }
+    .adminIndexPriceRow{ display:grid; grid-template-columns:minmax(0,1fr) 150px; gap:10px; align-items:end; padding:10px 12px; border:1px solid rgba(64,17,2,.10); border-radius:14px; background:rgba(255,255,255,.7); }
+    .adminIndexPriceName{ font-weight:950; line-height:1.12; }
+    .adminIndexPriceHint{ margin-top:4px; font-size:12.5px; color:rgba(64,17,2,.6); font-weight:700; }
+    .adminIndexActions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .adminIndexStatus{ min-height:18px; margin-top:8px; }
+    @media (max-width: 720px){ .adminIndexPriceRow{ grid-template-columns:1fr; } }
+
+
+    .orderItem{
+      border:1px solid var(--border); background:var(--paper);
+      border-radius:18px; box-shadow:0 12px 30px rgba(64,17,2,.08);
+      overflow:hidden;
+    }
+    .orderHead{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px; padding:12px 14px; cursor:pointer;
+    }
+    .orderId{ font-weight:950; }
+    .orderMeta{ font-size:13px; opacity:.7; font-weight:800; }
+    .chev{ font-size:18px; font-weight:950; opacity:.7; }
+
+    .orderBody{ display:none; padding:12px 14px; border-top:1px solid var(--border); }
+    .orderItem.open .orderBody{ display:block; }
+
+    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width:720px){ .grid2{ grid-template-columns:1fr; } }
+
+    .btnRow{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:12px; }
+    .btnDanger{ background: rgba(64,17,2,.08); border:1px solid rgba(64,17,2,.18); }
+    .badge{
+      font-size:12px; font-weight:950; padding:6px 10px;
+      border-radius:999px; border:1px solid var(--border);
+      background:rgba(246,186,96,.12);
+    }
+    .hr{ height:1px; background: rgba(64,17,2,.10); margin:12px 0; }
+
+    /* DRAWER */
+    .drawerOverlay{ position:fixed; inset:0; background:rgba(0,0,0,.25); display:none; z-index:9000; }
+    .drawerOverlay.show{ display:block; }
+    .drawer{
+      position:fixed; top:0; right:0; height:100%;
+      width:min(460px, 92vw);
+      background: var(--paper);
+      border-left:1px solid var(--border);
+      box-shadow: -18px 0 60px rgba(0,0,0,.18);
+      transform: translateX(100%);
+      transition: transform .2s ease;
+      z-index:9100;
+      display:flex; flex-direction:column;
+    }
+    .drawerOverlay.show + .drawer{ transform: translateX(0); }
+
+    .drawerHeader{
+      padding:14px;
+      border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .drawerTitle{ font-weight:950; margin:0; }
+    .drawerCloseX{ width:36px; height:36px; border-radius:999px; border:1px solid rgba(64,17,2,.12); background:rgba(255,255,255,.92); color:var(--choco); font-size:20px; line-height:1; font-weight:900; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 10px 24px rgba(64,17,2,.10); margin-left:auto; flex:0 0 auto; }
+    .drawerCloseX:hover{ transform:translateY(-1px); }
+    .drawerBody{ padding:14px; overflow:auto; }
+    .drawerControls{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .chip.active{ background: rgba(242,91,143,.14); }
+
+    /* MODALS */
+    .modalOverlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.25);
+      display:none; align-items:center; justify-content:center;
+      padding:16px; z-index:9999;
+    }
+    .modalOverlay.show{ display:flex; }
+    .modalBox{
+      width:min(560px, 100%);
+      background:var(--paper); border:1px solid var(--border);
+      border-radius:18px; box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .modalTitle{ font-weight:950; margin:0 0 6px; }
+    .modalText{ color:rgba(64,17,2,.74); font-weight:800; margin:0 0 12px; }
+    .modalFooter{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+
+    /* LOADING */
+    .adminLoadingOverlay{
+      position:fixed; inset:0; display:none;
+      align-items:center; justify-content:center;
+      background: rgba(64,17,2,.25);
+      backdrop-filter: blur(6px);
+      z-index:12000;
+      padding:16px;
+    }
+    .adminLoadingOverlay.show{ display:flex; }
+  
+    .topbarInner.adminTopbarInner{ justify-content:space-between; }
+    .adminBrand{ display:flex; align-items:center; gap:12px; }
+    .adminBrandMeta{ display:flex; flex-direction:column; gap:2px; }
+    .adminBrandTitle{ font-weight:950; font-size:18px; line-height:1.08; }
+    .adminBrandSubtitle{ font-size:12.5px; color:rgba(64,17,2,.65); font-weight:800; }
+
+    .loginBrandTop{
+      display:flex; justify-content:center; align-items:center;
+      margin: 16px 0 10px;
+    }
+    .loginBrandTop img{ height:58px; width:auto; display:block; }
+
+    .amLoginTopbar{ position:sticky; top:0; z-index:15; }
+    .amLoginTopbarInner{ justify-content:center; }
+    .amLoginBrand{ display:flex; align-items:center; justify-content:center; width:100%; }
+    .amLoginTopbarLogo{ height:48px; width:auto; display:block; }
+    @media (max-width:720px){ .amLoginTopbarLogo{ height:42px; } }
+
+    .adminHeaderActions{
+      display:none; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .adminHeaderActions .btn{ min-height:44px; border-radius:16px; font-weight:900; }
+    .adminHeaderActions .adminBtnRefresh{
+      background: linear-gradient(180deg, rgba(246,186,96,.96), rgba(246,186,96,.86));
+      color: var(--choco);
+      border:1px solid rgba(246,186,96,.55);
+    }
+    .adminHeaderActions .adminBtnHistory{
+      background: linear-gradient(180deg, rgba(242,91,143,.16), rgba(242,91,143,.10));
+      color: var(--choco);
+      border:1px solid rgba(242,91,143,.22);
+    }
+    .adminHeaderActions .adminBtnLogout{
+      background: rgba(255,255,255,.84);
+      color: var(--choco);
+      border:1px solid var(--border);
+    }
+    .adminMobileBar{
+      position: fixed;
+      left: 12px; right: 12px;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+      display:none; align-items:center; gap:10px;
+      padding:10px;
+      border-radius:999px;
+      border:1px solid rgba(64,17,2,.10);
+      background: linear-gradient(180deg, rgba(255,252,248,.92), rgba(246,239,231,.88));
+      box-shadow: 0 18px 44px rgba(64,17,2,.14);
+      backdrop-filter: blur(10px);
+      z-index: 9500;
+    }
+    .adminMobileBtn{
+      width:52px; height:52px;
+      min-width:52px; min-height:52px;
+      padding:0;
+      overflow:hidden;
+      flex:0 0 52px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.92);
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(249,246,242,.94));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:950; font-size:16px; color:var(--choco);
+      box-shadow: 0 10px 22px rgba(64,17,2,.08), inset 0 1px 0 rgba(255,255,255,.85);
+      cursor:pointer;
+    }
+    .adminMobileBtn .ico{
+      display:block;
+      font-size:20px;
+      line-height:1;
+      transform: translateY(-1px);
+    }
+    .adminMobileBtn .txt{
+      display:none !important;
+    }
+    .adminMobileCenter{
+      flex:1; min-width:0;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.92);
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,244,239,.94));
+      padding:4px;
+      display:grid;
+      grid-template-columns:1fr;
+      box-shadow: 0 10px 22px rgba(64,17,2,.06), inset 0 1px 0 rgba(255,255,255,.80);
+    }
+    .adminMobilePill{
+      width:100%;
+      border:0;
+      border-radius:999px;
+      background: transparent;
+      color: var(--choco);
+      min-height:50px;
+      padding:0 16px;
+      font-weight:950;
+      font-size:14.5px;
+      cursor:pointer;
+    }
+    @media (max-width:880px){
+      #panelView{ padding-bottom: 96px; }
+      .adminHeaderActions{ display:none !important; }
+      .adminMobileBar.isVisible{ display:flex; }
+    }
+    @media (min-width:881px){
+      .adminHeaderActions.isVisible{ display:flex; }
+    }
+
+  
+    @media (max-width:880px){
+      .topbarInner.adminTopbarInner{
+        justify-content:center;
+      }
+      .adminBrand{
+        width:100%;
+        justify-content:center;
+        text-align:center;
+      }
+      .adminBrandMeta{
+        align-items:center;
+      }
+    }
+
+  
+    .loginBrandTop{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin: 18px 0 14px;
+    }
+    .loginBrandTop img{
+      height: 58px;
+      width: auto;
+      display:block;
+    }
+
+  
+
+    /* ===== Admin chrome sync ===== */
+    .adminTopbarInner{ justify-content:space-between !important; }
+    .adminHeaderActions{ display:none; align-items:center; gap:10px; flex-wrap:wrap; }
+    .adminMobileBar{ z-index:9500; }
+    .adminMobileCenter{ grid-template-columns:1fr; }
+    .adminMobilePill.isAccent{
+      background: linear-gradient(180deg, rgba(242,91,143,.18), rgba(246,186,96,.18));
+      box-shadow: inset 0 0 0 1px rgba(64,17,2,.08), 0 8px 18px rgba(64,17,2,.08);
+    }
+    .adminBrandTitle{ font-size:clamp(20px, 1.7vw, 22px) !important; }
+    .adminBrandSubtitle{ font-size:12.5px !important; }
+    @media (max-width:880px){
+      #panelView{ padding-bottom:96px; }
+      .adminHeaderActions{ display:none !important; }
+      .adminMobileBar.isVisible{ display:grid; }
+      .adminPage.is-app .adminTopbarInner{ justify-content:center !important; }
+      .adminPage.is-app .adminBrand{
+        width:100%;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        margin:0 auto;
+      }
+      .adminPage.is-app .adminBrandMeta{
+        width:auto;
+        flex:0 1 auto;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+      }
+      .adminPage.is-app .adminBrand .amSectionBrandLogo{
+        margin:0;
+      }
+      .adminBrandTitle{ font-size:clamp(23px, 6vw, 25px) !important; }
+      .adminBrandSubtitle{ font-size:12.5px !important; }
+    }
+    @media (min-width:881px){
+      .adminMobileBar{ display:none !important; }
+      .adminHeaderActions.isVisible{ display:flex; }
+    }
+
+
+    /* ===== Fix menú móvil pagos desde hub ===== */
+    @media (max-width:880px){
+      .adminMobileBar{
+        display:none;
+        align-items:center !important;
+        justify-content:space-between;
+        gap:10px;
+        padding:10px;
+        grid-template-columns:none !important;
+      }
+      .adminMobileBar.isVisible{
+        display:flex !important;
+      }
+      .adminMobileBtn{
+        flex:0 0 52px;
+        width:52px;
+        height:52px;
+      }
+      .adminMobileCenter{
+        flex:1 1 auto;
+        min-width:0;
+        display:block;
+        grid-template-columns:none !important;
+      }
+      .adminMobilePill{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:100%;
+        min-width:0;
+        white-space:nowrap;
+      }
+    }
+
+  </style>
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260918"><script src="config.js?v=20260918"></script><script src="runtime.js?v=20260918"></script></head>
+
+<body class="adminPage is-login amaredV2 workspacePage">
+  <div class="amHubBootOverlay" aria-hidden="true">
+  <div class="amHubBootCard">
+    <div class="amHubBootRow">
+      <div class="amHubBootSpinner"></div>
+      <div>
+        <div class="amHubBootTitle">Cargando página…</div>
+        <div class="amHubBootSub">Estamos preparando tu espacio.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<header id="adminLoginTopbar" class="topbar amLoginTopbar">
+    <div class="topbarInner amLoginTopbarInner">
+      <div class="amLoginBrand" aria-label="AMARED">
+        <img class="amLoginTopbarLogo" src="assets/Logo-Amared.svg" alt="AMARED">
+      </div>
+    </div>
+  </header>
+
+  <div class="topbar hidden" id="adminTopbar">
+    <div class="topbarInner amSectionTopbarInner adminTopbarInner">
+      <div class="amSectionBrand adminBrand">
+        <img src="assets/Logo-Isotipo-Amared.svg" class="amSectionBrandLogo" alt="AMARED">
+        <div class="amSectionBrandMeta adminBrandMeta">
+          <div class="amSectionTitle adminBrandTitle">Pagos</div>
+          <div class="amSectionSubtitle adminBrandSubtitle">Gestión de pagos y pedidos</div>
+        </div>
+      </div>
+
+      <div id="adminHeaderActions" class="amSectionActions adminHeaderActions" aria-label="Acciones de pagos">
+        <button id="btnHeaderRefresh" class="btn amBtnWarm adminBtnRefresh" type="button">Recargar</button>
+        <button id="btnHeaderHistory" class="btn amBtnSoft adminBtnHistory" type="button">Historial</button>
+        <button id="btnHeaderLogout" class="btn amBtnNeutral adminBtnLogout" type="button">Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- LOGIN -->
+    <section id="loginView" class="card amLoginCenter amLoginCard">
+      <div class="amLoginHero">
+        <h2 class="amLoginTitle">Acceso Pagos</h2>
+        <p class="amLoginLead">Selecciona un perfil aprobado e ingresa tu contraseña.</p>
+      </div>
+
+      <div class="field">
+        <label for="loginOperator">Perfil</label>
+        <select id="loginOperator" class="input">
+          <option value="">Cargando perfiles...</option>
+        </select>
+        <div class="muted small" style="margin-top:6px;">Solo aparecen perfiles activos con categoría <b>payments</b> o <b>admin</b>.</div>
+      </div>
+
+      <div class="field" style="margin-top:10px;">
+        <label for="loginPin">Contraseña</label>
+        <div class="amLoginPinRow">
+          <input id="loginPin" type="password" class="input" placeholder="••••••" autocomplete="current-password">
+          <button id="btnTogglePin" class="amPinToggleBtn" type="button" aria-label="Mostrar contraseña">👁</button>
+        </div>
+      </div>
+
+      <div class="amRememberWrap">
+        <label class="amRememberLabel">
+          <input id="loginRemember" type="checkbox">
+          <span>Recuérdame en este dispositivo</span>
+        </label>
+        <div class="amRememberHint">Si lo activas, la próxima vez entrarás automáticamente desde este navegador.</div>
+      </div>
+
+      <div class="amLoginActionsRow">
+        <button id="btnLogin" class="btn primary" type="button">Ingresar</button>
+        <a id="btnManageProfiles" class="btn secondary btnLinkLike" href="profiles.html">Gestionar perfiles</a>
+      </div>
+      <div id="loginError" class="status amLoginStatus"></div>
+    </section>
+
+    <!-- PANEL (Pendientes) -->
+    <div id="panelView" class="hidden">
+      <div class="card">
+        <div class="panelTop">
+          <div class="operatorLine">Operador: <strong id="operatorName"></strong></div>
+        </div>
+
+        <div id="status" class="mutedSmall"></div>
+        <div id="list" class="list"></div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="adminMobileBar" class="amBottomBar adminMobileBar" aria-label="Acciones de pagos">
+    <button id="btnMobileRefresh" class="amBottomIconBtn adminMobileBtn" type="button" aria-label="Recargar"><span class="ico">↻</span><span class="txt">Recargar</span></button>
+    <div class="amBottomCenter one adminMobileCenter">
+      <button id="btnMobileHistory" class="amBottomPill isAccent adminMobilePill" type="button">Historial</button>
+    </div>
+    <button id="btnMobileLogout" class="amBottomIconBtn adminMobileBtn" type="button" aria-label="Salir"><span class="ico">⎋</span><span class="txt">Salir</span></button>
+  </div>
+
+  <!-- Drawer historial -->
+  <div id="drawerOverlay" class="drawerOverlay"></div>
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawerHeader">
+      <h3 class="drawerTitle">Historial</h3>
+      <button id="btnCloseDrawer" class="drawerCloseX" type="button" aria-label="Cerrar historial">✕</button>
+    </div>
+    <div class="drawerBody">
+      <div class="drawerControls">
+        <button class="chip active" data-filter="ALL">Todos</button>
+        <button class="chip" data-filter="Pagado">Pagados</button>
+        <button class="chip" data-filter="Cancelado">Cancelados</button>
+        <button id="btnHistRefresh" class="btn secondary" type="button">Refrescar</button>
+      </div>
+
+      <div id="histStatus" class="mutedSmall"></div>
+      <div id="histList" class="list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR PAGO -->
+  <div class="modalOverlay" id="payModal" aria-hidden="true">
+    <div class="modalBox">
+      <h3 class="modalTitle" id="payTitle">Confirmar pago</h3>
+      <p class="modalText" id="payText"></p>
+
+      <div class="field">
+        <label for="payMethod">Método de pago</label>
+        <select id="payMethod" class="input">
+          <option value="">Seleccionar método de pago</option>
+          <option value="Nequi">Nequi</option>
+          <option value="Daviplata">Daviplata</option>
+          <option value="Bancolombia">Bancolombia</option>
+          <option value="Davivienda">Davivienda</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="field hidden" id="payOtherWrap">
+        <label for="payOtherText">Otro método</label>
+        <input id="payOtherText" class="input" placeholder="Especificar método">
+      </div>
+
+      <div class="field">
+        <label for="payRef">Referencia de pago</label>
+        <input id="payRef" class="input" placeholder="Referencia / últimos dígitos">
+      </div>
+
+      <p class="mutedSmall" id="payTimer"></p>
+
+      <div class="modalFooter">
+        <button class="btn secondary" id="btnPayBack" type="button">Volver</button>
+        <button class="btn primary" id="btnPayConfirm" type="button" disabled>Confirmar pago</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CANCELAR -->
+  <div class="modalOverlay" id="cancelModal" aria-hidden="true">
+    <div class="modalBox">
+      <h3 class="modalTitle" id="cancelTitle">Cancelar pedido</h3>
+      <p class="modalText" id="cancelText"></p>
+
+      <div class="field">
+        <label for="cancelReason">Razón de cancelación</label>
+        <select id="cancelReason" class="input">
+          <option value="">Seleccionar razón</option>
+          <option value="Cliente canceló">Cliente canceló</option>
+          <option value="Error en el pedido">Error en el pedido</option>
+          <option value="Dirección incorrecta">Dirección incorrecta</option>
+          <option value="Duplicado">Duplicado</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="field hidden" id="cancelOtherWrap">
+        <label for="cancelOtherText">Otra razón</label>
+        <input id="cancelOtherText" class="input" placeholder="Especificar razón">
+      </div>
+
+      <p class="mutedSmall" id="cancelTimer"></p>
+
+      <div class="modalFooter">
+        <button class="btn secondary" id="btnCancelBack" type="button">Volver</button>
+        <button class="btn primary" id="btnCancelConfirm" type="button" disabled>Cancelar pedido</button>
+      </div>
+    </div>
+  </div>
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="adminLoadingOverlay" aria-hidden="true">
+    <div class="amLoadingCard">
+      <div class="amLoadingRow">
+        <div class="amSpinner"></div>
+        <div>
+          <div id="loadingText" class="amLoadingTitle">Cargando...</div>
+          <div id="loadingDesc" class="amLoadingSub">Por favor espera.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="routes-data.js?v=20260513-admin-routes-fuzzy-v27"></script>
+  <script src="admin.js?v=20260513-admin-neighborhood-maps-v27"></script>
+<script src="experience.js?v=20260918" defer></script></body>
+</html>

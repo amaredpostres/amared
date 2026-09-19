@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <script>
+    try {
+      if (new URLSearchParams(window.location.search).get("hub") === "1") {
+        document.documentElement.classList.add("hubBoot");
+      } else {
+        document.documentElement.classList.add("hubReady");
+      }
+    } catch (_e) {
+      document.documentElement.classList.add("hubReady");
+    }
+  </script>
+  <style>
+    html.hubBoot body { opacity: 1; }
+    html.hubReady body { opacity: 1; transition: opacity .12s ease; }
+    html.hubBoot body { overflow: hidden; }
+    .amHubBootOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 130000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(64,17,2,.25);
+      backdrop-filter: blur(6px);
+      box-sizing: border-box;
+    }
+    html.hubBoot .amHubBootOverlay{ display:flex; }
+    html.hubReady .amHubBootOverlay{ display:none; }
+    .amHubBootCard{
+      width: fit-content;
+      max-width: min(420px, calc(100vw - 32px));
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(64,17,2,.12);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+      box-sizing: border-box;
+    }
+    .amHubBootRow{
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .amHubBootRow > div:last-child{ min-width:0; }
+    .amHubBootSpinner{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(64,17,2,.18);
+      border-top-color: rgba(64,17,2,.70);
+      animation: amHubBootSpin 1s linear infinite;
+      flex: 0 0 auto;
+    }
+    .amHubBootTitle{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.08;
+      color:#401102;
+    }
+    .amHubBootSub{
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: rgba(64,17,2,.72);
+    }
+    @media (max-width: 560px){
+      .amHubBootCard{
+        max-width: calc(100vw - 28px);
+        padding: 14px 16px;
+      }
+      .amHubBootTitle{ font-size: 16px; }
+      .amHubBootSub{ font-size: 12.5px; }
+    }
+    @keyframes amHubBootSpin{ to{ transform: rotate(360deg); } }
+
+.profilesMobileBtn .ico{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  line-height:1;
+  transform: translateY(-1px);
+}
+.profilesMobileBtn .txt{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+.profilesMobilePill .ico{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+  transform: translateY(-1px);
+  flex:0 0 auto;
+}
+.profilesMobilePill .txt{
+  display:inline-block;
+  font-weight:950;
+  letter-spacing:.1px;
+}
+.profilesMobileBar.isHubMode{
+  grid-template-columns:52px minmax(0,1fr);
+}
+.profilesMobileBar.isHubMode .profilesMobileCenter{
+  grid-column:2;
+}
+
+.profilesMobileBar.isHubMode{
+  gap:12px;
+  padding-left:12px;
+  padding-right:12px;
+}
+.profilesMobileBar.isHubMode .profilesMobileCenter{
+  grid-column:2;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+.profilesMobileBar.isHubMode .profilesMobilePill{
+  min-height:52px;
+  padding-left:18px;
+  padding-right:18px;
+}
+#editBack{
+  align-items:flex-start;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding: max(16px, env(safe-area-inset-top, 0px) + 12px) 12px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+#editBack .loadingCard{
+  width:min(760px, 100%);
+  max-height:calc(100dvh - 32px);
+  overflow:auto;
+  overscroll-behavior:contain;
+}
+#btnEditClose{
+  flex:0 0 auto;
+  font-size:18px;
+}
+
+.editModalHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:nowrap;
+}
+.editModalHeaderText{
+  min-width:0;
+  flex:1 1 auto;
+}
+#btnEditClose{
+  margin-left:auto;
+  align-self:flex-start;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.profilesMobileList{ display:none; margin-top:14px; }
+.profilesAccCard{
+  border:1px solid rgba(64,17,2,.10);
+  border-radius:20px;
+  background:rgba(255,255,255,.74);
+  box-shadow:0 10px 24px rgba(64,17,2,.05);
+  overflow:hidden;
+}
+.profilesAccCard + .profilesAccCard{ margin-top:12px; }
+.profilesAccCard summary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  cursor:pointer;
+}
+.profilesAccCard summary::-webkit-details-marker{ display:none; }
+.profilesAccName{
+  font-weight:950;
+  font-size:16px;
+  color:var(--choco);
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.profilesAccMeta{
+  font-size:12px;
+  font-weight:900;
+  color:rgba(64,17,2,.62);
+  margin-top:4px;
+}
+.profilesAccChevron{
+  flex:0 0 auto;
+  width:32px;
+  height:32px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(246,186,96,.18);
+  border:1px solid rgba(246,186,96,.34);
+  font-size:14px;
+  color:var(--choco);
+  transition:transform .18s ease;
+}
+.profilesAccCard[open] .profilesAccChevron{ transform:rotate(180deg); }
+.profilesAccBody{
+  border-top:1px solid rgba(64,17,2,.08);
+  padding:12px 16px 14px;
+}
+.profilesAccRow + .profilesAccRow{ margin-top:10px; }
+.profilesAccLabel{
+  font-size:12px;
+  font-weight:900;
+  color:rgba(64,17,2,.62);
+  margin-bottom:4px;
+}
+.profilesAccValue{
+  font-weight:850;
+  color:var(--choco);
+  line-height:1.35;
+}
+.profilesAccActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.profilesAccActions .btn{
+  flex:1 1 140px;
+  min-height:46px;
+}
+@media (max-width: 720px){
+  .profilesTableWrap{ display:none; }
+  .profilesMobileList{ display:block; }
+  .profilesAccBody .badge{ margin-right:6px; margin-bottom:6px; }
+}
+
+/* ===== Edit modal visual refresh ===== */
+.editProfileModal{
+  width:min(820px, 100%);
+  padding:0 !important;
+  border-radius:30px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,251,247,.97)) !important;
+  border:1px solid rgba(64,17,2,.10) !important;
+  box-shadow:0 26px 70px rgba(64,17,2,.18) !important;
+  overflow:hidden;
+}
+.editProfileShell{
+  padding:22px 22px 20px;
+}
+.editModalHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(64,17,2,.08);
+}
+.editModalEyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(242,91,143,.12), rgba(246,186,96,.14));
+  border:1px solid rgba(64,17,2,.06);
+  font-size:12px;
+  font-weight:950;
+  color:rgba(64,17,2,.76);
+}
+.editModalEyebrow::before{
+  content:"✎";
+  font-size:12px;
+}
+.editModalTitle{
+  margin:0;
+  font-size:clamp(24px, 2.2vw, 30px);
+  line-height:1.04;
+  letter-spacing:.1px;
+  color:var(--choco);
+}
+.editModalLead{
+  margin-top:8px;
+  max-width:54ch;
+  color:rgba(64,17,2,.68);
+  font-weight:800;
+  line-height:1.45;
+  font-size:13.5px;
+}
+.editModalHeaderText{
+  min-width:0;
+  flex:1 1 auto;
+}
+#btnEditClose{
+  width:46px;
+  height:46px;
+  min-width:46px;
+  border-radius:999px;
+  border:1px solid rgba(64,17,2,.10);
+  background:rgba(255,255,255,.94);
+  color:var(--choco);
+  box-shadow:0 12px 24px rgba(64,17,2,.08);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  font-weight:900;
+  cursor:pointer;
+}
+#btnEditClose:hover{
+  transform:translateY(-1px);
+}
+.editModalSections{
+  display:grid;
+  gap:14px;
+  margin-top:16px;
+}
+.editModalCard{
+  border:1px solid rgba(64,17,2,.08);
+  background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(253,248,242,.92));
+  border-radius:24px;
+  padding:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+}
+.editModalCardTitle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 0 12px;
+  font-size:15px;
+  font-weight:950;
+  color:var(--choco);
+}
+.editModalCardTitle::before{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:999px;
+  font-size:12px;
+  background:linear-gradient(180deg, rgba(242,91,143,.18), rgba(246,186,96,.18));
+  border:1px solid rgba(64,17,2,.06);
+}
+.editModalCard.basic .editModalCardTitle::before{ content:"👤"; }
+.editModalCard.cats .editModalCardTitle::before{ content:"✓"; }
+.editModalCard.security .editModalCardTitle::before{ content:"🔒"; }
+.editGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.editField{
+  display:grid;
+  gap:7px;
+}
+.editField label,
+.editModalCard .field > label{
+  display:block;
+  margin:0;
+  font-size:12.5px;
+  font-weight:950;
+  letter-spacing:.12px;
+  color:rgba(64,17,2,.78);
+}
+.editProfileModal .input{
+  min-height:52px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(64,17,2,.10);
+  background:rgba(255,255,255,.96);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+  font-weight:900;
+  font-size:15px;
+}
+.editProfileModal .input:disabled{
+  background:rgba(247,241,234,.9);
+  color:rgba(64,17,2,.82);
+}
+.editProfileModal .input::placeholder{
+  color:rgba(64,17,2,.42);
+  font-weight:800;
+}
+.editProfileModal .chips{
+  gap:10px;
+}
+.editProfileModal .chip{
+  padding:12px 14px;
+  min-height:48px;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(64,17,2,.10);
+  box-shadow:0 6px 14px rgba(64,17,2,.04);
+}
+.editProfileModal .chip input{
+  accent-color:#f25b8f;
+}
+.editProfileModal .chip:has(input:checked){
+  background:linear-gradient(180deg, rgba(242,91,143,.12), rgba(246,186,96,.14));
+  border-color:rgba(242,91,143,.24);
+}
+.editModalHint{
+  margin-top:8px;
+  color:rgba(64,17,2,.6);
+  font-weight:800;
+  line-height:1.42;
+  font-size:12.75px;
+}
+.editModalActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid rgba(64,17,2,.08);
+}
+#btnEditSave{
+  min-width:220px;
+  min-height:52px;
+  border-radius:18px;
+  box-shadow:0 16px 28px rgba(242,91,143,.20);
+}
+#editErr{
+  min-height:18px;
+  font-weight:900;
+  margin-top:10px;
+}
+@media (max-width: 720px){
+  .editProfileModal{
+    border-radius:26px !important;
+  }
+  .editProfileShell{
+    padding:18px 16px 18px;
+  }
+  .editModalHeader{
+    gap:12px;
+    padding-bottom:14px;
+  }
+  .editModalTitle{
+    font-size:30px;
+  }
+  .editModalLead{
+    font-size:13px;
+  }
+  .editGrid{
+    grid-template-columns:1fr;
+  }
+  .editModalCard{
+    padding:14px;
+    border-radius:22px;
+  }
+  .editProfileModal .chips{
+    gap:8px;
+  }
+  .editProfileModal .chip{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .editModalActions{
+    justify-content:stretch;
+  }
+  #btnEditSave{
+    width:100%;
+    min-width:0;
+  }
+}
+
+  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AMARED · Gestión de perfiles</title>
+
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="styles.css?v=20260505-fonts-v1">
+
+  <style>
+    .topbarInner{ justify-content: space-between; }
+    .brand{ gap: 12px; }
+    .brandMeta{ display:flex; flex-direction:column; gap:2px; }
+    .brandTitle{ font-weight: 950; font-size: 18px; line-height: 1.1; }
+    .brandSubtitle{ font-size: 12.5px; color: rgba(64,17,2,.65); font-weight: 800; }
+
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 920px){ .grid2{ grid-template-columns: 1fr; } }
+
+    .field label{ display:block; font-size: 12.5px; color: rgba(64,17,2,.70); font-weight: 800; margin-bottom: 6px; }
+    .input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      outline: none;
+      font-weight: 800;
+      background: rgba(255,255,255,.85);
+    }
+
+    .rowBetween{ display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap; }
+    .row{ display:flex; align-items:center; gap: 10px; flex-wrap: wrap; }
+
+    .pill{
+      display:inline-flex; align-items:center; gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      font-weight: 900; font-size: 12.5px;
+    }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      overflow:hidden;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.65);
+    }
+    .table th, .table td{
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(64,17,2,.08);
+      text-align: left;
+      vertical-align: middle;
+    }
+    .table th{
+      font-size: 12px;
+      color: rgba(64,17,2,.65);
+      font-weight: 950;
+      background: rgba(247,206,145,.12);
+    }
+    .badge{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(242,91,143,.10);
+      border: 1px solid rgba(242,91,143,.20);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .chips{ display:flex; gap: 8px; flex-wrap: wrap; }
+    .chip{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip input{ transform: scale(1.05); }
+
+    .loadingOverlay{
+      position: fixed; inset: 0;
+      display:none; align-items:center; justify-content:center;
+      background: rgba(64,17,2,.18);
+      z-index: 99999;
+      padding: 18px;
+    }
+    .loadingCard{
+      width:auto;
+      max-width:min(430px, calc(100vw - 32px));
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+    .loadingTitle{ font-weight: 950; font-size: 18px; line-height:1.08; }
+  
+    .profilesTopbarHidden{ display:none !important; }
+    .loginBrandTop{
+      display:flex; justify-content:center; align-items:center;
+      margin: 18px 0 14px;
+    }
+    .loginBrandTop img{ height:58px; width:auto; display:block; }
+    .profilesLoginShell{ max-width:760px; margin:0 auto; }
+    .profilesLoginCard{
+      background: var(--paper);
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:22px;
+      box-shadow: var(--shadow);
+    }
+    .profilesLoginTitle{
+      margin:0 0 8px; text-align:center; font-weight:950;
+      font-size: clamp(26px, 3vw, 40px); line-height:1.08;
+    }
+    .profilesLoginLead{
+      margin:0 0 18px; text-align:center;
+      font-size: clamp(14px, 1.4vw, 17px);
+      color: rgba(64,17,2,.74); font-weight:850;
+    }
+    .profilesPinRow{
+      display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end;
+    }
+    .profilesEyeBtn{
+      width:56px; height:56px; border-radius:16px; border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(246,186,96,.92), rgba(246,186,96,.82));
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; font-weight:900; cursor:pointer;
+      box-shadow: 0 10px 20px rgba(64,17,2,.08);
+    }
+    .profilesRemember{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900; color: rgba(64,17,2,.82); margin-top:12px;
+    }
+    .profilesLoginHint{
+      margin-top:8px; color: rgba(64,17,2,.72);
+      font-weight:800; font-size:13px; line-height:1.35;
+    }
+    .profilesMgrCard{ margin-top:14px; }
+    .profilesTableWrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
+    @media (max-width: 720px){
+      .profilesLoginCard{ padding:18px; border-radius:22px; }
+      .profilesLoginTitle{ font-size: clamp(22px, 7vw, 30px); }
+      .profilesLoginLead{ font-size:14px; }
+      .profilesTableWrap .table{ min-width:640px; }
+      .row .btn{ width:100%; }
+    }
+
+  
+    .profilesHeaderActions{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .profilesMobileBar{
+  position: fixed;
+  left: 12px; right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  display:none;
+  grid-template-columns:52px minmax(0,1fr) 52px;
+  gap:9px;
+  align-items:center;
+  padding:9px;
+  border-radius:999px;
+  border:1px solid rgba(64,17,2,.10);
+  background: rgba(254,246,239,.84);
+  box-shadow: 0 18px 44px rgba(64,17,2,.14);
+  backdrop-filter: blur(10px);
+  z-index: 9500;
+}
+    .profilesMobileBtn{
+  width:52px; height:52px;
+  min-width:52px; min-height:52px;
+  padding:0;
+  overflow:hidden;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.92);
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(249,246,242,.94));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:950; font-size:16px; color:var(--choco);
+  box-shadow: 0 10px 22px rgba(64,17,2,.08), inset 0 1px 0 rgba(255,255,255,.85);
+  cursor:pointer;
+}
+    .profilesMobileCenter{
+  min-width:0;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:6px;
+  padding:4px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.92);
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,244,239,.94));
+  box-shadow: 0 10px 22px rgba(64,17,2,.06), inset 0 1px 0 rgba(255,255,255,.80);
+}
+    .profilesMobilePill{
+  min-width:0;
+  width:100%;
+  min-height:50px;
+  border:0;
+  border-radius:999px;
+  background: transparent;
+  color: var(--choco);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:950;
+  font-size:14.5px;
+  padding:0 16px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+    @media (max-width: 720px){
+      .topbarInner{
+        justify-content:center;
+      }
+      .brand{
+        width:100%;
+        justify-content:center;
+        text-align:center;
+      }
+      .brandMeta{
+        align-items:center;
+      }
+      .profilesHeaderActions{
+        display:none !important;
+      }
+      .profilesMgrCard{
+        padding-bottom: 96px;
+      }
+      .profilesMgrCard #btnReload{
+        display:none !important;
+      }
+      .profilesMobileBar.isVisible{
+        display:grid;
+        grid-template-columns:52px minmax(0,1fr) 52px;
+        align-items:center;
+      }
+    }
+
+  
+    /* ===== Ajustes visuales refinados ===== */
+    .profilesHeaderActions .btn{
+      min-height: 46px;
+      border-radius: 16px;
+      font-weight: 900;
+    }
+    .profilesMobilePill.back{
+      background: linear-gradient(180deg, rgba(242,91,143,.18), rgba(246,186,96,.18));
+      box-shadow: inset 0 0 0 1px rgba(64,17,2,.08), 0 8px 18px rgba(64,17,2,.08);
+    }
+    .profilesBtnBack{
+      background: linear-gradient(180deg, rgba(255,248,242,.98), rgba(252,244,235,.94)) !important;
+      border: 1px solid rgba(246,186,96,.55) !important;
+      color: var(--choco) !important;
+      box-shadow: 0 8px 18px rgba(64,17,2,.06), inset 0 1px 0 rgba(255,255,255,.82);
+    }
+    .profilesBtnLogout{
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,247,245,.94)) !important;
+      border: 1px solid rgba(64,17,2,.10) !important;
+      color: var(--choco) !important;
+      box-shadow: 0 8px 18px rgba(64,17,2,.06), inset 0 1px 0 rgba(255,255,255,.82);
+    }
+    .profilesBtnRefresh{
+      background: linear-gradient(180deg, rgba(246,186,96,.96), rgba(246,186,96,.86));
+      border: 1px solid rgba(246,186,96,.52);
+      color: var(--choco);
+      box-shadow: 0 8px 18px rgba(64,17,2,.06);
+    }
+    .profilesMgrCard .cardTitle{
+      letter-spacing: .1px;
+    }
+    .profilesMgrCard .pill{
+      background: rgba(255,255,255,.86);
+    }
+    .profilesTableWrap .table{
+      margin-top: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+    }
+    .profilesTableWrap .table td{
+      font-weight: 800;
+    }
+    .profilesHint{
+      color: rgba(64,17,2,.68);
+      font-weight: 800;
+      line-height: 1.4;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .profilesSectionSpacer{
+      margin-top: 10px;
+    }
+    .profilesMobileCenter{
+      grid-template-columns: 1fr;
+    }
+    .profilesMobilePill{
+      min-height: 50px;
+      padding: 0 16px;
+    }
+    .profilesMobilePill.back{
+      background: linear-gradient(180deg, rgba(242,91,143,.18), rgba(246,186,96,.18));
+      border: 0;
+      box-shadow: inset 0 0 0 1px rgba(64,17,2,.08), 0 8px 18px rgba(64,17,2,.08);
+    }
+    .profilesMobilePill.logout{
+      background: transparent;
+      border: 0;
+    }
+    @media (max-width: 720px){
+      .profilesLoginCard{
+        padding: 18px;
+      }
+      .profilesMgrCard{
+        border-radius: 24px;
+      }
+      .profilesMgrCard .cardTitle{
+        font-size: 18px;
+      }
+      .profilesTableWrap{
+        margin-left: -4px;
+        margin-right: -4px;
+      }
+      .profilesMobileCenter{
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* ===== Login alineado con Delivery ===== */
+    .profilesLoginTopbar{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(254,246,239,.72);
+      border-bottom: 1px solid var(--border);
+    }
+    .profilesLoginTopbar .topbarInner{ justify-content:center; }
+    .profilesLoginTopbar img{ height:48px; width:auto; display:block; }
+    .profilesLoginShell{ max-width:700px; margin:28px auto 0; }
+    .profilesLoginCard{
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:26px;
+      box-shadow:0 18px 40px rgba(64,17,2,.08);
+    }
+    .profilesLoginCard .field label{
+      font-size:12.5px;
+      color: rgba(64,17,2,.78);
+      font-weight:400;
+      margin-bottom:6px;
+    }
+    .profilesLoginCard .input{
+      font-weight:400;
+      background:rgba(255,255,255,.85);
+    }
+    .profilesLoginCard #loginProfile{ font-weight:400; }
+    .profilesLoginTitle{
+      margin:0 0 8px;
+      text-align:center;
+      font-weight:950;
+      font-size:clamp(22px,2.15vw,28px);
+      line-height:1.05;
+    }
+    .profilesLoginLead{
+      margin:0;
+      text-align:center;
+      font-size:clamp(15px,1.35vw,17px);
+      color: rgba(64,17,2,.78);
+      font-weight:850;
+    }
+    .profilesPinRow{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .profilesEyeBtn{
+      min-width:54px;
+      height:48px;
+      padding:0 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(246,186,96,.96), rgba(245,196,108,.92));
+      box-shadow:0 10px 22px rgba(246,186,96,.22);
+      font-size:18px;
+      cursor:pointer;
+    }
+    .profilesRemember{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      font-weight:850;
+      color:rgba(64,17,2,.82);
+      margin-top:10px;
+    }
+    .profilesRemember input{
+      width:18px;
+      height:18px;
+      accent-color:#ff5f95;
+      transform:none !important;
+    }
+    .profilesLoginHint{
+      margin-top:6px;
+      color:rgba(64,17,2,.66);
+      font-size:13px;
+      font-weight:750;
+      line-height:1.35;
+    }
+    .profilesLoginActions{ margin-top:14px; }
+    .profilesLoginActions .btn{ width:100%; min-height:48px; }
+    #loading.loadingOverlay{
+      position: fixed; inset: 0;
+      display:none; align-items:center; justify-content:center;
+      background: rgba(64,17,2,.25);
+      backdrop-filter: blur(6px);
+      z-index: 99999;
+      padding: 16px;
+    }
+    #loading .loadingCard{
+      width:auto;
+      max-width:min(430px, calc(100vw - 32px));
+      background: rgba(255,255,255,.96);
+      border:1px solid rgba(64,17,2,.12);
+      border-radius:22px;
+      padding:14px 18px;
+      box-shadow:0 18px 40px rgba(0,0,0,.18);
+      text-align:left;
+    }
+    #loading .loadingCard .row{ gap:10px; flex-wrap:nowrap; align-items:center; }
+    #loading .loadingCard .row > div:last-child{ min-width:0; }
+    .profilesLoadingSpinner{
+      width:18px; height:18px;
+      border-radius:999px;
+      border:2px solid rgba(64,17,2,.18);
+      border-top-color: rgba(64,17,2,.70);
+      animation: pspin 1s linear infinite;
+      flex:0 0 auto;
+    }
+    @keyframes pspin{ to{ transform: rotate(360deg); } }
+    @media (max-width: 720px){
+      .profilesLoginTopbar img{ height:42px; }
+      .profilesLoginShell{ margin:16px auto 0; }
+      .profilesLoginCard{ padding:18px; border-radius:22px; }
+      .profilesLoginTitle{ font-size:clamp(20px,6.2vw,24px); }
+      .profilesLoginLead{ font-size:15px; }
+    }
+
+  
+
+    /* ===== Profiles chrome sync ===== */
+    .profilesHeaderActions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .profilesMobileBar{ z-index: 9500; }
+    .profilesMobileCenter{ grid-template-columns:1fr; }
+    .profilesPage.is-app #profilesLoginBrand{ display:none !important; }
+    .profilesPage.is-login #profilesLoginBrand{ display:block; }
+
+    @media (max-width: 720px){
+      .profilesPage.is-app #profilesTopbar .topbarInner{
+        justify-content: center !important;
+        gap: 12px;
+      }
+      .profilesPage.is-app #profilesTopbar .amSectionBrand{
+        width:100%;
+        justify-content:center;
+        text-align:center;
+        margin:0 auto;
+      }
+      .profilesPage.is-app #profilesTopbar .amSectionBrandMeta{
+        align-items:center;
+        text-align:center;
+      }
+      .profilesHeaderActions{ display:none !important; }
+      .profilesMgrCard{ padding-bottom: 96px; }
+      .profilesMgrCard #btnReload{ display:none !important; }
+      .profilesTopbarHidden{ display:none !important; }
+      .profilesMobileBar.isVisible{ display:grid; grid-template-columns:52px minmax(0,1fr) 52px; align-items:center; }
+      .profilesMobileBar.isHubMode{ grid-template-columns:56px minmax(0,1fr); gap:12px; }
+      .profilesMobileBar.isHubMode .profilesMobileCenter{ padding:0; background:transparent; border:0; box-shadow:none; }
+      .profilesMobileBar.isHubMode .profilesMobilePill{ width:100%; min-height:52px; }
+      #editBack{ padding:12px 12px calc(12px + env(safe-area-inset-bottom, 0px)); }
+      #editBack .loadingCard{ max-height:calc(100dvh - 24px); border-radius:22px; }
+      #editBack .rowBetween{ align-items:flex-start; }
+      #editBack .row[style*="justify-content:flex-end"]{ justify-content:stretch !important; }
+      #editBack #btnEditSave{ width:100%; }
+    }
+    @media (min-width: 721px){
+      .profilesMobileBar{ display:none !important; }
+    }
+
+  </style>
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260918"><script src="config.js?v=20260918"></script><script src="runtime.js?v=20260918"></script></head>
+<body class="profilesPage is-login amaredV2 workspacePage">
+  <a class="skipLink" href="#main-content">Saltar al contenido</a><div class="amHubBootOverlay" aria-hidden="true">
+  <div class="amHubBootCard">
+    <div class="amHubBootRow">
+      <div class="amHubBootSpinner"></div>
+      <div>
+        <div class="amHubBootTitle">Cargando página…</div>
+        <div class="amHubBootSub">Estamos preparando tu espacio.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<header class="topbar amLoginTopbar" id="profilesLoginBrand">
+    <div class="topbarInner amLoginTopbarInner">
+      <div class="amLoginTopbarBrand" aria-label="AMARED">
+        <img class="amLoginTopbarLogo" src="assets/Logo-Amared.svg" alt="AMARED">
+      </div>
+    </div>
+  </header>
+  
+  <header class="topbar profilesTopbarHidden" id="profilesTopbar">
+    <div class="topbarInner amSectionTopbarInner">
+      <div class="amSectionBrand">
+        <img class="amSectionBrandLogo" src="assets/Logo-Isotipo-Amared.svg" alt="AMARED">
+        <div class="amSectionBrandMeta">
+          <div class="amSectionTitle">Gestión de perfiles</div>
+          <div class="amSectionSubtitle">Rangos y accesos del sistema</div>
+        </div>
+      </div>
+
+      <div class="amSectionActions profilesHeaderActions">
+        <button id="btnBack" class="btn amBtnSoft profilesBtnBack" type="button">Volver</button>
+        <button id="btnLogout" class="btn amBtnNeutral profilesBtnLogout" type="button" disabled>Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <div class="hero hidden" id="profilesHero" style="display:none;">
+      <h1 class="heroTitle">Perfiles del sistema</h1>
+      <p class="heroSubtitle">Administra rangos de acceso para Cocina, Pagos, Envíos, Compras, Perfiles y Admin.</p>
+    </div>
+
+    <section id="gateCard">
+      <div class="card amLoginCard">
+        <div class="amLoginHero">
+          <h2 class="amLoginTitle">Acceso Perfiles</h2>
+          <p class="amLoginLead">Selecciona un perfil aprobado e ingresa el PIN.</p>
+        </div>
+
+        <div class="field">
+          <label for="loginProfile">Perfil</label>
+          <select id="loginProfile" class="input">
+            <option value="">Cargando perfiles…</option>
+          </select>
+          <div class="amLoginFieldHint">Solo aparecen perfiles activos con categoría <b>profiles</b> o <b>admin</b>.</div>
+        </div>
+
+        <div class="field" style="margin-top:10px;">
+          <label for="inpSecret">PIN</label>
+          <div class="amLoginPinRow">
+            <input id="inpSecret" class="input" type="password" placeholder="••••••" autocomplete="current-password">
+            <button id="btnTogglePin" class="amPinToggleBtn" type="button" aria-label="Mostrar u ocultar PIN">👁</button>
+          </div>
+        </div>
+
+        <div class="amRememberWrap">
+        <label class="amRememberLabel">
+          <input id="chkRememberProfiles" type="checkbox">
+          Recuérdame en este dispositivo
+        </label>
+        <div class="amRememberHint">Si lo activas, la próxima vez entrarás automáticamente desde este navegador.</div>
+      </div>
+
+        <div class="amLoginActionsRow">
+          <button id="btnUnlock" class="btn primary" type="button">Ingresar</button>
+          <button id="btnGateBack" class="btn secondary" type="button">Volver atrás</button>
+        </div>
+
+        <div id="gateErr" class="status amLoginStatus"></div>
+      </div>
+    </section>
+
+    <!-- MANAGER -->
+    <section class="card profilesMgrCard" id="mgrCard" style="display:none;">
+      <div class="rowBetween">
+        <h2 class="cardTitle" style="margin:0;">Listado</h2>
+        <div class="row">
+          <div class="pill" id="pillCount">0 perfiles</div>
+          <button id="btnReload" class="btn secondary profilesBtnRefresh" type="button">Recargar</button>
+        </div>
+      </div>
+
+      <div class="profilesTableWrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categorías</th>
+            <th>Clave</th>
+            <th style="width:260px;">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      </div>
+
+      <div id="profilesMobileList" class="profilesMobileList" aria-label="Listado de perfiles"></div>
+
+      <div id="listMsg" class="status"></div>
+      <div class="profilesHint">Aquí puedes revisar perfiles activos, editar sus rangos y agregar nuevos accesos sin salir de la página.</div>
+
+      <hr style="margin:16px 0; opacity:.2;">
+
+      <h2 class="cardTitle profilesSectionSpacer">Agregar perfil</h2>
+
+      <div class="grid2">
+        <div>
+          <div class="field">
+            <label for="inpName">Nombre</label>
+            <input id="inpName" class="input" type="text" placeholder="Ej: Paola">
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="inpId">ID (automático)</label>
+            <input id="inpId" class="input" type="text" disabled>
+            <div class="muted small" style="margin-top:6px;">
+              Se genera desde el nombre (sin tildes, espacios → guiones bajos).
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="field">
+            <label>Rangos / páginas</label>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" value="kitchen" checked> Cocina</label>
+              <label class="chip"><input type="checkbox" value="payments"> Pagos</label>
+              <label class="chip"><input type="checkbox" value="index_admin"> Página de pedidos</label>
+              <label class="chip"><input type="checkbox" value="delivery"> Envíos</label>
+              <label class="chip"><input type="checkbox" value="costs"> Compras / Recetas</label>
+              <label class="chip"><input type="checkbox" value="profiles"> Perfiles</label>
+              <label class="chip"><input type="checkbox" value="admin"> Admin</label>
+            </div>
+            <div class="muted small" style="margin-top:6px;">
+              Un perfil puede estar en varios rangos o páginas del sistema.
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:12px;">
+            <label for="inpPassword">Contraseña inicial</label>
+            <input id="inpPassword" class="input" type="password" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label for="inpPassword2">Confirmar contraseña</label>
+            <input id="inpPassword2" class="input" type="password" placeholder="Repite la contraseña" autocomplete="new-password">
+            <div class="muted small" style="margin-top:6px;">
+              Esta contraseña será la clave personal del perfil para futuros accesos por usuario.
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button id="btnAdd" class="btn primary" type="button">Agregar</button>
+          </div>
+
+          <div id="mgrErr" class="status" style="color:#b00020;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- Edit modal -->
+  <div id="editBack" class="loadingOverlay" aria-hidden="true" style="display:none;">
+    <div class="loadingCard editProfileModal">
+      <div class="editProfileShell">
+        <div class="editModalHeader">
+          <div class="editModalHeaderText">
+            <div class="editModalEyebrow">Configuración del perfil</div>
+            <h2 class="editModalTitle">Editar perfil</h2>
+            <div class="editModalLead">
+              Actualiza el nombre, los accesos y, si lo necesitas, la contraseña del perfil sin perder su identificador actual.
+            </div>
+          </div>
+          <button id="btnEditClose" class="iconBtn" type="button" aria-label="Cerrar" title="Cerrar">✕</button>
+        </div>
+
+        <div class="editModalSections">
+          <section class="editModalCard basic">
+            <div class="editModalCardTitle">Información principal</div>
+            <div class="editGrid">
+              <div class="editField">
+                <label for="editName">Nombre</label>
+                <input id="editName" class="input" type="text" placeholder="Ej: Paola">
+              </div>
+              <div class="editField">
+                <label for="editId">ID (fijo)</label>
+                <input id="editId" class="input" type="text" disabled>
+              </div>
+            </div>
+          </section>
+
+          <section class="editModalCard cats">
+            <div class="editModalCardTitle">Accesos asignados</div>
+            <div class="chips" id="editCats">
+              <label class="chip"><input type="checkbox" value="kitchen"> Cocina</label>
+              <label class="chip"><input type="checkbox" value="payments"> Pagos</label>
+              <label class="chip"><input type="checkbox" value="index_admin"> Página de pedidos</label>
+              <label class="chip"><input type="checkbox" value="delivery"> Envíos</label>
+              <label class="chip"><input type="checkbox" value="costs"> Compras / Recetas</label>
+              <label class="chip"><input type="checkbox" value="profiles"> Perfiles</label>
+              <label class="chip"><input type="checkbox" value="admin"> Admin</label>
+            </div>
+            <div class="editModalHint">
+              Puedes asignar varias categorías al mismo perfil para centralizar accesos sin salir de esta pantalla.
+            </div>
+          </section>
+
+          <section class="editModalCard security">
+            <div class="editModalCardTitle">Seguridad</div>
+            <div class="editGrid">
+              <div class="editField">
+                <label for="editPassword">Nueva contraseña (opcional)</label>
+                <input id="editPassword" class="input" type="password" placeholder="Déjala vacía si no la cambiarás" autocomplete="new-password">
+              </div>
+              <div class="editField">
+                <label for="editPassword2">Confirmar nueva contraseña</label>
+                <input id="editPassword2" class="input" type="password" placeholder="Repite la nueva contraseña" autocomplete="new-password">
+              </div>
+            </div>
+            <div class="editField" style="margin-top:12px;">
+              <label for="editAdminPinConfirm">Código admin para confirmar cambio de contraseña</label>
+              <input id="editAdminPinConfirm" class="input" type="password" placeholder="Solo si cambiarás la contraseña" autocomplete="current-password">
+            </div>
+            <div class="editModalHint">
+              Para editar solo el nombre o las categorías no hace falta confirmar con el código admin. Ese paso solo se usa si vas a cambiar la contraseña.
+            </div>
+          </section>
+        </div>
+
+        <div class="editModalActions">
+          <button id="btnEditSave" class="btn primary" type="button">Guardar cambios</button>
+        </div>
+
+        <div id="editErr" class="status" style="color:#b00020;"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="profilesMobileBar" class="amBottomBar profilesMobileBar" aria-label="Acciones de perfiles">
+    <button id="btnMobileReload" class="amBottomIconBtn profilesMobileBtn" type="button" aria-label="Recargar"><span class="ico">↻</span><span class="txt">Recargar</span></button>
+    <div class="amBottomCenter one profilesMobileCenter">
+      <button id="btnMobileBack" class="amBottomPill isAccent profilesMobilePill back" type="button" aria-label="Volver"><span class="ico" aria-hidden="true">↩</span><span class="txt">Volver</span></button>
+    </div>
+    <button id="btnMobileLock" class="amBottomIconBtn profilesMobileBtn" type="button" aria-label="Salir"><span class="ico">⎋</span><span class="txt">Salir</span></button>
+  </div>
+
+  <div id="loading" class="amLoadingOverlay" aria-hidden="true" style="display:none;">
+    <div class="amLoadingCard">
+      <div class="amLoadingRow">
+        <div class="amSpinner"></div>
+        <div>
+          <div class="amLoadingTitle" id="loadingTitle">Cargando…</div>
+          <div class="amLoadingSub" id="loadingMsg">Procesando</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="profiles.js?v=20260329-async-sections-v4"></script>
+<script src="experience.js?v=20260918" defer></script></body>
+</html>
