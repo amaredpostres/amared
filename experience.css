@@ -292,7 +292,6 @@ body.amaredV2{background:var(--cream);font-size:16px;line-height:1.55;color:var(
  .atelierFooter p,.teamAccess{font-size:14px}
  .storefront .purchaseJourney strong{font-size:13px}
  .storefront .indexAdminMobileBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;min-width:58px;gap:2px}
- .storefront .indexAdminMobileBtn .txt{font:800 11px var(--font-main)}
  .storefront .indexAdminMobileCenter{gap:4px;min-width:0}
  .storefront .indexAdminMobilePill{padding:8px;font-size:13px}
 }
@@ -312,15 +311,9 @@ body.amaredV2{background:var(--cream);font-size:16px;line-height:1.55;color:var(
 
 @media(max-width:860px){
  .storefront .indexAdminMobileCenter{display:flex}
- .storefront .indexAdminMobileBtn .txt{display:block}
  .storefront .stepper button{width:100%}
  .storefront .deliveryTileCopy small{font-size:14px;line-height:1.55}
  .storefront .cartLineMeta>small{font-size:12px}
- .workspacePage .amBottomAction,.workspacePage .amDeliveryMobileAction{flex-direction:column;gap:3px}
- .workspacePage .amBottomAction .txt,.workspacePage .amDeliveryMobileAction .txt{display:block;font-size:11px;line-height:1.2}
- .workspacePage .amBottomPill,.workspacePage .amDeliveryMobileSeg .txt{font-size:14px}
- .costsPage .mNavBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:19px}
- .costsPage .mNavBtn::after{font-size:10px;font-weight:800;line-height:1.2;content:attr(aria-label)}
  .costsPage .hasBottomSummary .container,.costsPage.hasBottomSummary .container{padding-bottom:210px!important}
 .costsPage .btnHistoryFab{bottom:110px}
 }
@@ -332,11 +325,54 @@ body.amaredV2{background:var(--cream);font-size:16px;line-height:1.55;color:var(
  .workspacePage .hubCardDesc{font-size:15px;line-height:1.55}
  .workspacePage .hubCardBtn,.workspacePage #hubProfilePill,.workspacePage #hubCountPill{display:none}
  .workspacePage .hubEmoji{min-width:36px;width:36px;height:36px;font-size:20px}
- .workspacePage .amMobileAction{flex-direction:column;gap:3px}
- .workspacePage .amMobileAction .txt{display:block;font-size:11px;line-height:1.2}
  .workspacePage .profilesMobileBar.isHubMode{grid-template-columns:56px minmax(0,1fr) 56px}
- .workspacePage .profilesMobileAction .txt{display:block;font-size:11px;line-height:1.2}
- .workspacePage .amBottomIconBtn{flex-direction:column;gap:3px}
- .workspacePage .adminMobileBtn .txt,.workspacePage .profilesMobileBtn .txt{display:block!important;position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;clip-path:none;font-size:11px;line-height:1.2;white-space:normal}
  .workspacePage .hubMetaRow{display:none}
+}
+
+/* One mobile action-bar format; glyphs do not depend on the device font. */
+@media(max-width:860px){
+ .workspacePage{ --menu-font-size:16px; --menu-control-size:48px; }
+ .workspacePage :is(#adminMobileBar,#amKitchenMobileBar,#amDeliveryMobileBar,#mobileNav,#profilesMobileBar,#indexAdminMobileBar){
+   left:10px;right:10px;gap:6px;padding:8px;grid-template-columns:var(--menu-control-size) minmax(0,1fr) var(--menu-control-size);
+   align-items:center;border-radius:32px;
+ }
+ .workspacePage #mobileNav:not(.hidden){display:grid}
+ .workspacePage :is(.adminMobileCenter,.amMobileCenter,.amDeliveryMobileCenter,.mNavTabs,.profilesMobileCenter,.indexAdminMobileCenter,.hubMobileCenter){
+   display:flex;flex:1;min-width:0;width:100%;height:auto;min-height:52px;gap:2px;padding:2px;border-radius:28px;
+ }
+ .workspacePage :is(.adminMobileCenter,.amMobileCenter,.amDeliveryMobileCenter,.mNavTabs,.profilesMobileCenter,.indexAdminMobileCenter,.hubMobileCenter) button{
+   flex:1;min-width:0;width:100%;min-height:48px;height:auto;padding:6px 2px;display:flex;align-items:center;justify-content:center;gap:6px;
+   border-radius:24px;font-family:var(--font-main);font-size:var(--menu-font-size);font-weight:800;line-height:1.25;letter-spacing:0;
+ }
+ .workspacePage :is(.adminMobileCenter,.amMobileCenter,.amDeliveryMobileCenter,.mNavTabs,.profilesMobileCenter,.indexAdminMobileCenter,.hubMobileCenter) button .txt{
+   font-family:var(--font-main);font-size:var(--menu-font-size);font-weight:800;line-height:1.25;letter-spacing:0;white-space:nowrap;
+ }
+ .workspacePage :is(#btnMobileRefresh,#mBtnRefresh,#dMBtnRefresh,#mNavReload,#btnMobileReload,#btnIndexAdminBarRefresh,#btnHubMobileRefresh,#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub){
+   display:flex;flex:0 0 var(--menu-control-size);align-items:center;justify-content:center;
+   width:var(--menu-control-size);height:var(--menu-control-size);min-width:var(--menu-control-size);min-height:var(--menu-control-size);
+   padding:0;gap:0;border-radius:50%;font-size:0!important;color:var(--choco);
+ }
+ .workspacePage :is(#btnMobileRefresh,#mBtnRefresh,#dMBtnRefresh,#mNavReload,#btnMobileReload,#btnIndexAdminBarRefresh,#btnHubMobileRefresh,#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub) > *{display:none!important}
+ .workspacePage :is(#btnMobileRefresh,#mBtnRefresh,#dMBtnRefresh,#mNavReload,#btnMobileReload,#btnIndexAdminBarRefresh,#btnHubMobileRefresh,#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub)::after{content:none!important}
+ .workspacePage :is(#btnMobileRefresh,#mBtnRefresh,#dMBtnRefresh,#mNavReload,#btnMobileReload,#btnIndexAdminBarRefresh,#btnHubMobileRefresh,#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub)::before{
+   content:'';display:block;flex:none;width:24px;height:24px;background-color:currentColor;
+   -webkit-mask:var(--menu-icon) center/contain no-repeat;mask:var(--menu-icon) center/contain no-repeat;
+   pointer-events:none;
+ }
+ .workspacePage :is(#btnMobileRefresh,#mBtnRefresh,#dMBtnRefresh,#mNavReload,#btnMobileReload,#btnIndexAdminBarRefresh,#btnHubMobileRefresh){ --menu-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%207v5h-5%22%2F%3E%3Cpath%20d%3D%22M19.2%208a8%208%200%201%200%20.3%207%22%2F%3E%3C%2Fsvg%3E"); }
+ .workspacePage :is(#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub){ --menu-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10%204H5v16h5M10%2012h11m-4-4%204%204-4%204%22%2F%3E%3C%2Fsvg%3E"); }
+ .workspacePage :is(#btnMobileLogout,#mBtnLogout,#dMBtnLogout,#mNavExit,#btnMobileLock,#btnIndexAdminBarHub)[aria-label="Inicio"]{ --menu-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m3%2010%209-7%209%207%22%2F%3E%3Cpath%20d%3D%22M5%209v11h5v-6h4v6h5V9%22%2F%3E%3C%2Fsvg%3E"); }
+ .workspacePage #btnIndexAdminBarHub[aria-label="Volver arriba"]{ --menu-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2020V4m-7%207%207-7%207%207%22%2F%3E%3C%2Fsvg%3E"); }
+ .workspacePage #hubMobileBar{grid-template-columns:var(--menu-control-size) minmax(0,1fr);padding:8px;gap:6px}
+ .workspacePage .amDeliveryMobileCenter button{width:auto;flex:1 1 auto}
+}
+@media(max-width:380px){ .workspacePage{ --menu-font-size:15px; } }
+@media(max-width:350px){
+ .workspacePage{ --menu-font-size:14px; --menu-control-size:44px; }
+ .workspacePage :is(#adminMobileBar,#amKitchenMobileBar,#amDeliveryMobileBar,#mobileNav,#profilesMobileBar,#indexAdminMobileBar){left:8px;right:8px;padding:4px;gap:2px}
+}
+/* The sidebar owns the desktop return to the workspace home. */
+@media(min-width:861px){
+ .workspacePage.is-app.hasWorkspaceNav :is(#btnHeaderHub,#btnKitchenHub,#btnDeliveryHub,#btnCostsHub,#btnIndexAdminDesktopHub),
+ .workspacePage.is-app.hasWorkspaceNav #btnBack[aria-label="Inicio"]{display:none!important}
 }
