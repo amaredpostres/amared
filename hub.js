@@ -18,44 +18,87 @@ const HUB_SHARED_PREFETCH = [
 const HUB_MODULE_PREFETCH = {
   kitchen: [
     { href:"kitchen.html", as:"document" },
-    { href:"kitchen.js?v=20260329-async-sections-v4", as:"script" },
-    { href:"kitchen-costs.js?v=20260302-fix7u", as:"script" },
+    { href:"kitchen.js?v=20260919-ux22", as:"script" },
+    { href:"kitchen-costs.js?v=20260919-ux22", as:"script" },
   ],
   payments: [
     { href:"admin.html", as:"document" },
-    { href:"admin.js?v=20260324-admin-mobile-hub-v2", as:"script" },
+    { href:"admin.js?v=20260919-ux22", as:"script" },
   ],
   delivery: [
     { href:"delivery.html", as:"document" },
     { href:"delivery.css", as:"style" },
-    { href:"delivery.js?v=20260324-02", as:"script" },
+    { href:"delivery.js?v=20260919-ux22", as:"script" },
   ],
   costs: [
     { href:"costs.html", as:"document" },
-    { href:"costs.css?v=20260330-v9", as:"style" },
-    { href:"kitchen-costs.js?v=20260328-costs-loading-badge-v8", as:"script" },
-    { href:"costs.js?v=20260328-costs-loading-badge-v8", as:"script" },
+    { href:"costs.css?v=20260919-ux22", as:"style" },
+    { href:"kitchen-costs.js?v=20260919-ux22", as:"script" },
+    { href:"costs.js?v=20260919-ux22", as:"script" },
   ],
   profiles: [
     { href:"profiles.html", as:"document" },
-    { href:"profiles.js?v=20260329-async-sections-v4", as:"script" },
+    { href:"profiles.js?v=20260919-ux22", as:"script" },
   ],
   index_admin: [
     { href:"index.html?admin=1", as:"document" },
-    { href:"app.js?v=20260330-index-admin-v4", as:"script" },
+    { href:"app.js?v=20260919-ux22", as:"script" },
   ],
 };
 
 const MODULES = [
   { key:"payments", title:"Pedidos y pagos", desc:"Revisa pedidos, corrige sus datos y confirma los pagos.", href:"admin.html", icon:"💳", allow:["payments","pago","admin"] },
-  { key:"costs", title:"Compras, inventario y recetas", desc:"Planea las compras, revisa existencias y controla tus costos.", href:"costs.html", icon:"🧾", allow:["costs","purchases","admin"] },
   { key:"kitchen", title:"Cocina", desc:"Gestiona la preparación y el avance de los pedidos.", href:"kitchen.html", icon:"🍰", allow:["kitchen","admin"] },
   { key:"delivery", title:"Envíos", desc:"Revisa pedidos listos y confirma entregas.", href:"delivery.html", icon:"📦", allow:["delivery","admin"] },
-  { key:"index_admin", title:"Página de pedidos", desc:"Responde opiniones y ajusta los precios visibles del catálogo web.", href:"index.html?admin=1", icon:"🛍️", allow:["index_admin","indexadmin","pedidosweb","weborders","admin"] },
-  { key:"profiles", title:"Gestión de perfiles", desc:"Administra perfiles, permisos y contraseñas.", href:"profiles.html", icon:"👤", allow:["profiles","admin"] },
+  { key:"costs", title:"Compras y recetas", desc:"Planea las compras, revisa existencias y controla tus costos.", href:"costs.html", icon:"🧾", allow:["costs","purchases","admin"] },
+  { key:"index_admin", title:"Catálogo y opiniones", desc:"Responde opiniones y ajusta los precios visibles del catálogo web.", href:"index.html?admin=1", icon:"🛍️", allow:["index_admin","indexadmin","pedidosweb","weborders","admin"] },
+  { key:"profiles", title:"Perfiles", desc:"Administra perfiles, permisos y contraseñas.", href:"profiles.html", icon:"👤", allow:["profiles","admin"] },
 ];
 
 const state = { session:null, profiles:[] };
+let dashboardCache=null, dashboardFlight=null;
+const dashboardKey = () => JSON.stringify([state.session?.id,state.session?.password,state.session?.categories]);
+function paintDashboard(){
+  const cache=dashboardCache?.key===dashboardKey() ? dashboardCache : null;
+  const counts=cache?.counts;
+  document.querySelectorAll('[data-pending]').forEach(badge=>{
+    const key=badge.dataset.pending, item=counts?.[key];
+    const n=item?.pending;
+    badge.className='hubPending '+key;
+    if(cache?.error) { badge.textContent='Sin actualizar';badge.classList.add('isUnavailable'); }
+    else if(!Number.isInteger(n)) {badge.textContent='Consultando…';badge.classList.add('isUnavailable');}
+    else {
+      badge.textContent=n===0 ? 'Sin pendientes' : key==='payments' ? `${n} ${n===1?'pendiente de pago':'pendientes de pago'}` : key==='kitchen' ? `${n} por preparar` : `${n} ${n===1?'listo para entregar':'listos para entregar'}`;
+      if(key==='kitchen' && item.in_progress) badge.textContent+=` · ${item.in_progress} en preparación`;
+      badge.classList.toggle('isClear',n===0 && !item.in_progress);
+    }
+  });
+  const status=document.getElementById('hubActivityStatus');
+  if(status) status.textContent=cache?.error ? 'No pudimos consultar los pendientes. Usa Actualizar para reintentar.' : counts ? 'Pendientes de todos los días · Actualizado '+new Date(cache.at).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}) : 'Consultando actividades pendientes…';
+}
+async function refreshDashboard(force=false){
+  if(!state.session) return;
+  const key=dashboardKey();
+  if(dashboardFlight?.key===key) return dashboardFlight.promise;
+  if(!force && dashboardCache?.key===key && Date.now()-dashboardCache.at<30000){paintDashboard();return;}
+  const session=state.session;
+  const promise=(async()=>{
+    try {
+      const out=await api({action:'dashboard_summary',auth_profile_id:session.id,auth_profile_password:session.password,auth_page:'hub'});
+      if(key!==dashboardKey() || !state.session) return;
+      const expected=allowedModules(session.categories).filter(m=>['payments','kitchen','delivery'].includes(m.key));
+      if(expected.some(m=>!Number.isInteger(out.counts?.[m.key]?.pending))) throw new Error('Resumen incompleto');
+      dashboardCache={key,counts:out.counts,at:Date.now()};
+    }catch {
+      if(key!==dashboardKey() || !state.session) return;
+      dashboardCache={key,error:true,at:Date.now()};
+    }finally {
+      if(dashboardFlight?.key===key) dashboardFlight=null;
+      paintDashboard();
+    }
+  })();
+  dashboardFlight={key,promise};return promise;
+}
 
 const hubProfile = document.getElementById("hubProfile");
 const hubPassword = document.getElementById("hubPassword");
@@ -137,6 +180,7 @@ function loadHubSession(){
   return null;
 }
 function clearHubSession(){
+  dashboardCache=null; dashboardFlight=null; state.session=null;
   try{ sessionStorage.removeItem(HUB_SS_KEY); }catch(_e){}
   try{ localStorage.removeItem(HUB_LS_KEY); }catch(_e){}
   clearAllPageSessions();
@@ -309,6 +353,7 @@ async function refreshHubPortal(forceProfiles=false){
         remember: !!state.session.remember
       };
       saveHubSession(!!state.session.remember);
+      dashboardCache=null;
       setShell('app');
       renderModules();
     } else {
@@ -344,7 +389,7 @@ function setShell(mode){
 
 function syncMobileBar(){
   if(!hubMobileBar) return;
-  const mobile = window.matchMedia('(max-width: 720px)').matches;
+  const mobile = window.matchMedia('(max-width: 860px)').matches;
   const appVisible = hubAppView && hubAppView.style.display !== 'none';
   const overlay = hubLoading && hubLoading.style.display === 'flex';
   hubMobileBar.classList.toggle('isVisible', mobile && appVisible && !overlay);
@@ -375,7 +420,7 @@ function renderModules(){
         </div>
         <div class="hubEmoji">${mod.icon}</div>
       </div>
-      <span class="btn primary hubCardBtn">Abrir</span>
+      <div class="hubCardFoot">${["payments","kitchen","delivery"].includes(mod.key) ? `<span class="hubPending" data-pending="${mod.key}">Consultando…</span>` : ""}<span class="btn primary hubCardBtn">Abrir</span></div>
     </button>
   `).join("");
   try{
@@ -389,6 +434,7 @@ function renderModules(){
       btn.addEventListener('touchstart', prefetch, { passive:true, once:true });
     });
   }catch(_e){}
+  paintDashboard(); refreshDashboard();
   // Fetch module assets when the user focuses or points at a module.
 }
 
@@ -532,7 +578,7 @@ hubGrid?.addEventListener('click', (ev)=>{
 window.addEventListener('resize', syncMobileBar);
 window.addEventListener('pageshow', ()=>{
   resetHubBusyState();
-  if(state.session){ setShell('app'); renderModules(); }
+  if(state.session){ dashboardCache=null; setShell('app'); renderModules(); }
   else syncMobileBar();
 });
 

@@ -9,8 +9,8 @@
   <link rel="preload" href="assets/Logo-Amared.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="assets/Logo-Isotipo-Amared.svg" as="image" type="image/svg+xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260602-private-access-v46">
-<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260919"><script src="config.js?v=20260919"></script><script src="runtime.js?v=20260919"></script></head>
+  <link rel="stylesheet" href="styles.css?v=20260919-ux22">
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260919-ux22"><script src="config.js?v=20260919-ux22"></script><script src="runtime.js?v=20260919-ux22"></script></head>
 <body class="launch-checking amaredV2 storefront">
   <a class="skipLink" href="#inicio">Saltar al contenido</a><section id="launchGate" class="launchGate hidden" aria-live="polite">
     <div class="launchGateShell">
@@ -120,7 +120,7 @@
             </div>
           </div>
 
-          <div id="products" class="products"></div>
+          <p id="quantityHelp" class="quantityHelp">Toca la cantidad para escribirla o usa − y +. Hasta 99 de cada postre.</p><div id="products" class="products"></div>
         </section>
 
         <section class="card cardOrder" id="pedido">
@@ -296,7 +296,7 @@
 
             </details><div class="waOptWrap">
               <label class="checkRow">
-                <input id="waOptIn" type="checkbox">
+                <input id="waOptIn" type="checkbox" checked>
                 <span>Autorizo avisos de este pedido por WhatsApp.</span>
               </label>
               <div id="waOptHint" class="waOptHint hidden">Puedes autorizar los avisos del pedido. Tu selección es opcional y puedes cambiarla.</div>
@@ -543,7 +543,7 @@
 
   <div id="orderLoadingOverlay" class="amOrderLoadingOverlay hidden" aria-hidden="true" style="display:none;">
     <div class="amOrderLoadingBackdropFx" aria-hidden="true"></div>
-    <div class="amOrderLoadingCard" role="status" aria-live="polite">
+    <div class="amOrderLoadingCard" role="dialog" aria-modal="true" aria-labelledby="orderLoadingText" aria-describedby="orderLoadingSub">
       <img class="amOrderLoadingBrand" src="assets/Logo-Amared.svg" alt="AMARED">
       <div class="amOrderLoadingVisual" aria-hidden="true">
         <div class="amOrderLoadingHalo"></div>
@@ -552,15 +552,15 @@
         </div>
       </div>
       <div class="amOrderLoadingCopy">
-        <div class="amOrderLoadingKicker">AMARED está preparando tu pedido</div>
-        <div id="orderLoadingText" class="amOrderLoadingTitle">Registrando pedido...</div>
+        <div class="amOrderLoadingKicker">TU MOMENTO DULCE</div>
+        <div role="status" aria-live="polite" id="orderLoadingText" class="amOrderLoadingTitle">Registrando pedido...</div>
         <div id="orderLoadingSub" class="amOrderLoadingSub">Estamos conectando tu pedido con AMARED.</div>
       </div>
       <div class="amOrderLoadingMeta">
         <span id="orderLoadingStep" class="amOrderLoadingStep">Iniciando</span>
         <strong id="orderLoadingPercent" class="amOrderLoadingPercent">0%</strong>
       </div>
-      <div class="amOrderLoadingTrack" aria-hidden="true"><span id="orderLoadingBar" class="amOrderLoadingBar"></span></div>
+      <div class="amOrderLoadingTrack" role="progressbar" aria-label="Registro del pedido (progreso estimado)" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="orderLoadingBar" class="amOrderLoadingBar"></span></div>
     </div>
   </div>
 
@@ -585,16 +585,17 @@
   <button id="btnOpinionesTop" class="backToTop hidden" type="button" aria-label="Volver al inicio">↑ Inicio</button>
 
   <div id="indexAdminMobileBar" class="indexAdminMobileBar hidden" aria-label="Acciones de la página de pedidos admin">
-    <button id="btnIndexAdminBarOpiniones" class="indexAdminMobileBtn isIconOnly" type="button" aria-label="Ir a opiniones"><span class="ico">💬</span></button>
+    <button id="btnIndexAdminBarRefresh" class="indexAdminMobileBtn" type="button" aria-label="Actualizar"><span class="ico" aria-hidden="true">↻</span><span class="txt">Actualizar</span></button>
     <div class="indexAdminMobileCenter">
+      <button id="btnIndexAdminBarOpiniones" class="indexAdminMobilePill" type="button" aria-label="Ir a opiniones">Opiniones</button>
       <button id="btnIndexAdminBarTools" class="indexAdminMobilePill" type="button">Precios</button>
     </div>
-    <button id="btnIndexAdminBarHub" class="indexAdminMobileBtn isIconOnly" type="button" aria-label="Volver al panel"><span class="ico">⌂</span></button>
+    <button id="btnIndexAdminBarHub" class="indexAdminMobileBtn isIconOnly" type="button" aria-label="Inicio"><span class="ico" aria-hidden="true">⌂</span><span class="txt">Inicio</span></button>
   </div>
 
-  <script src="routes-data.js?v=20260513-barrios-fuzzy"></script>
-  <script src="app.js?v=20260919-tutoriales-v17" defer></script>
-<footer class="atelierFooter"><div><img src="assets/Logo-Amared.svg" width="142" height="54" alt="AMARED"><p>Un detalle dulce, un momento especial.</p></div><nav aria-label="Redes y contacto"><a href="https://www.instagram.com/amaredpostres" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.tiktok.com/@amaredpostres" target="_blank" rel="noopener noreferrer">TikTok ↗</a><a href="https://wa.me/573028473086" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a></nav><a href="hub.html" class="teamAccess">Acceso del equipo</a></footer>
+  <script src="routes-data.js?v=20260919-ux22"></script>
+  <script src="app.js?v=20260919-ux22" defer></script>
+<footer class="atelierFooter"><div><img src="assets/Logo-Amared.svg" width="142" height="54" alt="AMARED"><p>Un detalle dulce, un momento especial.</p></div><a href="hub.html" class="teamAccess">Acceso del equipo</a></footer>
 <div class="mobileCartDock" id="mobileCartDock" hidden><div><small>Tu pedido · <span id="mobileCartUnits">0</span> postres</small><strong id="mobileCartTotal">$0</strong></div><button class="btn primary" type="button" data-checkout-open>Ver mi pedido →</button></div>
-<div id="uxToast" class="uxToast" role="status" aria-live="polite"></div><script src="experience.js?v=20260918" defer></script><script src="showcase.js?v=20260919" defer></script></body>
+<div id="uxToast" class="uxToast" role="status" aria-live="polite"></div><script src="experience.js?v=20260919-ux22" defer></script><script src="showcase.js?v=20260919-ux22" defer></script></body>
 </html>

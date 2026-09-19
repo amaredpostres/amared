@@ -382,7 +382,7 @@ function ensureHubReturnStyles_(){
   st.textContent = `
     .amHubReturnChip{position:fixed; top:calc(env(safe-area-inset-top, 0px) + 88px); right:14px; bottom:auto; z-index:9499; display:none; align-items:center; justify-content:center; min-height:40px; padding:0 15px; border-radius:999px; border:1px solid rgba(255,255,255,.96); background:linear-gradient(180deg, rgba(246,186,96,.97), rgba(242,91,143,.88)); box-shadow:0 12px 24px rgba(64,17,2,.18); font-weight:900; color:#401102; backdrop-filter: blur(8px);}
     .amHubReturnChip.isVisible{display:inline-flex;}
-    @media (min-width: 721px){ .amHubReturnChip{ display:none !important; } }
+    @media (min-width: 861px){ .amHubReturnChip{ display:none !important; } }
   `;
   document.head.appendChild(st);
 }
@@ -851,7 +851,7 @@ function ensureAdminHubReturnUI(){
     btn.id = "btnHeaderHub";
     btn.type = "button";
     btn.className = "btn amBtnSoft";
-    btn.textContent = "Panel";
+    btn.textContent = "Inicio";
     btn.addEventListener("click", goHub_);
     adminHeaderActions.insertBefore(btn, btnHeaderLogout || null);
   }
@@ -865,9 +865,9 @@ function syncAdminMobileReturnAction(){
   const fromHub = FROM_HUB;
   const ico = btnMobileLogout.querySelector('.ico');
   const txt = btnMobileLogout.querySelector('.txt');
-  btnMobileLogout.setAttribute('aria-label', fromHub ? 'Volver al panel' : 'Salir');
+  btnMobileLogout.setAttribute('aria-label', fromHub ? 'Inicio' : 'Salir');
   if(ico) ico.textContent = fromHub ? '⌂' : '⎋';
-  if(txt) txt.textContent = fromHub ? 'Panel' : 'Salir';
+  if(txt) txt.textContent = fromHub ? 'Inicio' : 'Salir';
 }
 
 
@@ -880,10 +880,10 @@ function syncAdminActionBars() {
     (loadingOverlay && loadingOverlay.classList.contains("show"));
 
   if (adminHeaderActions) {
-    const desktop = window.matchMedia("(min-width: 881px)").matches;
+    const desktop = window.matchMedia("(min-width: 861px)").matches;
     adminHeaderActions.classList.toggle("isVisible", panelOpen && desktop);
   }
-  const mobile = window.matchMedia("(max-width: 880px)").matches;
+  const mobile = window.matchMedia("(max-width: 860px)").matches;
   syncAdminMobileReturnAction();
   if (adminMobileBar) {
     adminMobileBar.classList.toggle("isVisible", panelOpen && mobile && !hasOverlay);

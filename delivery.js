@@ -141,7 +141,7 @@ function ensureHubReturnStyles_(){
   st.textContent = `
     .amHubReturnChip{position:fixed; top:calc(env(safe-area-inset-top, 0px) + 88px); right:14px; bottom:auto; z-index:9499; display:none; align-items:center; justify-content:center; min-height:40px; padding:0 15px; border-radius:999px; border:1px solid rgba(255,255,255,.96); background:linear-gradient(180deg, rgba(246,186,96,.97), rgba(242,91,143,.88)); box-shadow:0 12px 24px rgba(64,17,2,.18); font-weight:900; color:#401102; backdrop-filter: blur(8px);}
     .amHubReturnChip.isVisible{display:inline-flex;}
-    @media (min-width: 721px){ .amHubReturnChip{ display:none !important; } }
+    @media (min-width: 861px){ .amHubReturnChip{ display:none !important; } }
   `;
   document.head.appendChild(st);
 }
@@ -188,7 +188,7 @@ function scheduleDeliveryBarsSync(){
 }
 
 function isMobileViewport(){
-  try{ return window.matchMedia('(max-width: 720px)').matches; }catch(_e){ return window.innerWidth <= 720; }
+  try{ return window.matchMedia('(max-width: 860px)').matches; }catch(_e){ return window.innerWidth <= 860; }
 }
 function isVisibleEl(el){
   if(!el) return false;
@@ -235,7 +235,7 @@ function ensureDeliveryHubReturnUI(){
     btn.id = 'btnDeliveryHub';
     btn.type = 'button';
     btn.className = 'btn secondary';
-    btn.textContent = 'Panel';
+    btn.textContent = 'Inicio';
     btn.addEventListener('click', goHub_);
     desktopWrap.insertBefore(btn, btnLogoutTop || null);
   }
@@ -250,9 +250,9 @@ function syncDeliveryMobileReturnAction(){
   const fromHub = hasHubAccess_();
   const ico = btn.querySelector('.ico');
   const txt = btn.querySelector('.txt');
-  btn.setAttribute('aria-label', fromHub ? 'Volver al panel' : 'Salir');
+  btn.setAttribute('aria-label', fromHub ? 'Inicio' : 'Salir');
   if(ico) ico.textContent = fromHub ? '⌂' : '🚪';
-  if(txt) txt.textContent = fromHub ? 'Panel' : 'Salir';
+  if(txt) txt.textContent = fromHub ? 'Inicio' : 'Salir';
 }
 
 function syncDeliveryActionBars(){

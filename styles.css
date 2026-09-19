@@ -2835,7 +2835,7 @@ body.is-index-admin-view .layoutPremium{
 .indexAdminMobileBtn .ico{ font-size:20px; line-height:1; }
 .indexAdminMobileBtn .txt{ display:none; }
 .indexAdminMobileBtn.isIconOnly{ padding:0; }
-@media (min-width: 721px){
+@media (min-width: 861px){
   .indexAdminMobileBar{ display:none !important; }
 }
 body.is-index-admin-view .page{

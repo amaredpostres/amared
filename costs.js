@@ -398,7 +398,7 @@ function ensureCostsHubReturnUI(){
     btn.id = 'btnCostsHub';
     btn.type = 'button';
     btn.className = 'btn secondary';
-    btn.textContent = 'Panel';
+    btn.textContent = 'Inicio';
     btn.addEventListener('click', goHub_);
     desktopWrap.insertBefore(btn, el('btnExit') || null);
   }
@@ -411,7 +411,7 @@ function syncCostsMobileReturnAction_(){
   const btn = el('mNavExit');
   if(!btn) return;
   const fromHub = hasHubAccess_();
-  btn.setAttribute('aria-label', fromHub ? 'Volver al panel' : 'Salir');
+  btn.setAttribute('aria-label', fromHub ? 'Inicio' : 'Salir');
   btn.textContent = fromHub ? '⌂' : '⎋';
 }
 
@@ -451,7 +451,7 @@ function syncMobileNavForViewport_(){
 
   const appVisible = !!app && !app.classList.contains("hidden") && app.hidden !== true && (app.style.display !== "none");
   const unlockVisible = !!unlock && !unlock.classList.contains("hidden") && unlock.hidden !== true && (unlock.style.display !== "none");
-  const isMobile = (()=>{ try{ return window.innerWidth <= 560; }catch(_e){ return false; } })();
+  const isMobile = (()=>{ try{ return window.innerWidth <= 860; }catch(_e){ return false; } })();
 
   const hubUi = ensureCostsHubReturnUI();
   if(hubUi?.btn) hubUi.btn.style.display = (appVisible && !isMobile) ? "inline-flex" : "none";
@@ -2814,7 +2814,7 @@ function updateHistoryFabPosition_(){
   if(!fab) return;
   const app = el("appRoot");
   const unlock = el("unlockBack");
-  const isMobile = (()=>{ try{ return window.innerWidth <= 560; }catch(_e){ return false; } })();
+  const isMobile = (()=>{ try{ return window.innerWidth <= 860; }catch(_e){ return false; } })();
   const appVisible = !!app && !app.classList.contains("hidden") && app.hidden !== true && (app.style.display !== "none");
   const unlockVisible = !!unlock && !unlock.classList.contains("hidden") && unlock.hidden !== true && (unlock.style.display !== "none");
   const shouldShow = appVisible && !unlockVisible && state.view === "purchases" && historyDataReady_;

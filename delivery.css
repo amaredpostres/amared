@@ -184,7 +184,7 @@
 }
 
 /* Mobile */
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliverySyncBadge{ left:12px; right:12px; top:calc(env(safe-area-inset-top, 0px) + 78px); max-width:none; padding:11px 12px; }
   .orderHead{ flex-direction:column; align-items:flex-start; }
   .btnRow{ justify-content:stretch; }
@@ -327,18 +327,18 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   transform: translateY(18px);
 }
 
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryPage .container{ padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px); }
   .deliveryHeaderActions{ display:none !important; }
 }
-@media (min-width: 721px){
+@media (min-width: 861px){
   .amDeliveryMobileBar{ display:none !important; }
 }
 
 
 /* ===== v44 integrado en el bloque principal del menú móvil ===== */
 
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryPage .topbarInner{
     justify-content:center !important;
     align-items:center;
@@ -388,7 +388,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
 .rememberHint{ margin-top:6px; color:rgba(64,17,2,.66); font-size:13px; font-weight:750; }
 .loginActionsRow{ display:flex; gap:10px; margin-top:14px; justify-content:stretch; }
 .loginActionsRow .btn{ flex:1; min-height:48px; }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryPage .topbarInner{
     justify-content:center !important;
     align-items:center;
@@ -439,7 +439,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
 .deliveryPage .brandLogo{ height:34px !important; }
 .loginTitle{ font-size:clamp(22px,2.15vw,28px); }
 .loginLead{ font-size:clamp(15px,1.35vw,17px); }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryLoginHeaderLogo{ height:42px; }
   .deliveryPage.is-app .topbarInner{ justify-content:center !important; }
   .deliveryPage.is-app .deliveryAppBrand{ width:100%; justify-content:center !important; margin:0 auto; }
@@ -483,7 +483,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
 .deliveryPage .deliveryBrandSubtitle{
   font-size: 12.5px;
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryPage.is-app .deliveryTopbarInner{
     justify-content: space-between !important;
     gap: 12px;
@@ -501,13 +501,13 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   .deliveryPage .deliveryBrandTitle{ font-size: clamp(23px, 6vw, 25px); }
   .deliveryPage .deliveryBrandSubtitle{ font-size: 12.5px; }
 }
-@media (min-width: 721px){
+@media (min-width: 861px){
   .deliveryPage .deliveryHeaderActions{ display:flex; }
 }
 
 
 /* ===== mobile header centering fix ===== */
-@media (max-width: 720px){
+@media (max-width: 860px){
   .deliveryPage.is-app .deliveryTopbarInner{
     justify-content:center !important;
     gap:12px;
@@ -573,7 +573,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
 .pill.isPickupType{
   background: linear-gradient(180deg, rgba(242,91,143,.16), rgba(255,255,255,.92));
 }
-@media (max-width:720px){
+@media (max-width:860px){
   .deliveryFilterWrap{ display:none !important; }
 }
 
@@ -694,7 +694,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   box-shadow: inset 0 0 0 1px rgba(64,17,2,.08), 0 6px 14px rgba(64,17,2,.07);
 }
 
-@media (max-width:720px){
+@media (max-width:860px){
   .deliveryPage .container{ padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 94px); }
   .histModalHead{
     padding-right:48px;
@@ -962,7 +962,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   cursor:not-allowed;
   transform:none;
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .routeDragGuide{ align-items:flex-start; }
   .routePlannerHeader,
   .routeGroupHead{
@@ -1074,7 +1074,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   font-weight:800;
   color:rgba(64,17,2,.62);
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .routeExactRow{ flex-direction:column; align-items:stretch; }
   .routeExactRow .btn{ width:100%; }
 }
@@ -1226,7 +1226,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
 .routeDraggingActive *{
   user-select:none !important;
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .orderHead{
     align-items:flex-start;
   }
@@ -1282,7 +1282,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   line-height: 1.25;
   font-weight: 900;
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .routeMapManualHint{ font-size: 12.4px; }
   .routeStopRow .btn{ width: 100%; }
 }
@@ -1432,7 +1432,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   transform: none !important;
   box-shadow: none !important;
 }
-@media (max-width: 720px){
+@media (max-width: 860px){
   .routeGroup{
     padding: 12px;
   }
@@ -1542,7 +1542,7 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   background:linear-gradient(180deg, rgba(252,252,252,.98), rgba(242,239,236,.96)) !important;
   border-color:rgba(64,17,2,.10) !important;
 }
-@media (max-width:720px){
+@media (max-width:860px){
   .routeGroup::before{ width:5px; }
   .routeGroupHead{ padding-left:12px !important; }
   .routeCards{ padding:8px !important; }
@@ -1570,6 +1570,6 @@ body.deliveryOverlayOpen .amDeliveryMobileBar{
   color:#401102 !important;
   box-shadow:0 8px 18px rgba(242,91,143,.10);
 }
-@media (max-width:720px){
+@media (max-width:860px){
   .routeCardQuickActions{ width:100%; }
 }

@@ -11,7 +11,7 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}
 .storefront .subtotalBig{color:var(--choco)!important}
 .storefront .productInfo{text-align:left!important;align-items:stretch!important;width:100%;min-width:0}
 .storefront .productTop{width:100%}
-.storefront .amOrderLoadingMeta,.storefront .amOrderLoadingTrack{display:none!important}
+.storefront .amOrderLoadingOverlay:not(.is-order-registration) .amOrderLoadingMeta,.storefront .amOrderLoadingOverlay:not(.is-order-registration) .amOrderLoadingTrack{display:none!important}
 .storefront .amOrderLoadingKicker{display:none}
 .amaredV2 .backToTop{bottom:110px}
 @media(max-width:560px){.storefront .atelierHeroCopy h1{font-size:38px}}
@@ -244,6 +244,99 @@ body.amaredV2{background:var(--cream);font-size:16px;line-height:1.55;color:var(
 .workspacePage td{line-height:1.5}
 @media(min-width:1101px){.workspacePage.is-app.hasWorkspaceNav .hubGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:1100px){.storefront .layout.layoutPremium{grid-template-columns:minmax(0,1fr) 330px;gap:22px}.storefront .container.amIndex{padding:0 24px 40px}.storefront .topbarInner{padding:14px 24px}.atelierHeroCopy h1{font-size:46px}.storefront .atelierHero{gap:28px}.atelierHeroPhoto{height:310px}.atelierFooter{margin:0 24px}.workspaceNav{width:184px;padding:24px 12px}.workspacePage.is-app.hasWorkspaceNav{padding-left:184px}.workspacePage.is-app.hasWorkspaceNav .container{padding:22px}}
-@media(max-width:850px){.storefront .layout.layoutPremium{grid-template-columns:1fr}.storefront .cardOrder{position:static}.storefront .formGrid2{grid-template-columns:1fr 1fr}.storefront .productCard .name{min-height:0}.storefront .productDesc{min-height:0}.storefront .atelierHero{gap:24px}.atelierHeroCopy h1{font-size:40px}.atelierHeroPhoto{height:290px}.storeNav{gap:16px;font-size:12px}.purchaseJourney{gap:10px}.purchaseJourney small{font-size:11px}.purchaseJourney strong{font-size:12px}.purchaseJourney>a,.purchaseJourney>button{gap:9px}.atelierFooter{flex-wrap:wrap}.workspacePage.is-app.hasWorkspaceNav{padding-left:0}.workspaceNav{position:sticky;inset:auto;top:0;width:100%;padding:9px 14px;overflow-x:auto;flex-direction:row!important;align-items:center;gap:5px}.workspaceNav .navLabel,.workspaceNavLogo{display:none}.workspaceNav>a:not(.workspaceNavLogo){padding:9px 13px;white-space:nowrap;font-size:12px}.workspaceNav .navStore{margin:0;border:0;padding:9px 13px!important}.workspacePage.is-app.hasWorkspaceNav .topbar{position:static}.workspacePage.is-app.hasWorkspaceNav .container{padding:22px 16px 125px}.workspacePage .hubGrid{grid-template-columns:1fr 1fr}.mobileCartDock:not([hidden]){display:flex}.storefront{padding-bottom:94px}.uxToast{bottom:105px}}
+@media(max-width:860px){.storefront .layout.layoutPremium{grid-template-columns:1fr}.storefront .cardOrder{position:static}.storefront .formGrid2{grid-template-columns:1fr 1fr}.storefront .productCard .name{min-height:0}.storefront .productDesc{min-height:0}.storefront .atelierHero{gap:24px}.atelierHeroCopy h1{font-size:40px}.atelierHeroPhoto{height:290px}.storeNav{gap:16px;font-size:12px}.purchaseJourney{gap:10px}.purchaseJourney small{font-size:11px}.purchaseJourney strong{font-size:12px}.purchaseJourney>a,.purchaseJourney>button{gap:9px}.atelierFooter{flex-wrap:wrap}.workspacePage.is-app.hasWorkspaceNav{padding-left:0}.workspaceNav{position:sticky;inset:auto;top:0;width:100%;padding:9px 14px;overflow-x:auto;flex-direction:row!important;align-items:center;gap:5px}.workspaceNav .navLabel,.workspaceNavLogo{display:none}.workspaceNav>a:not(.workspaceNavLogo){padding:9px 13px;white-space:nowrap;font-size:12px}.workspaceNav .navStore{margin:0;border:0;padding:9px 13px!important}.workspacePage.is-app.hasWorkspaceNav .topbar{position:static}.workspacePage.is-app.hasWorkspaceNav .container{padding:22px 16px 125px}.workspacePage .hubGrid{grid-template-columns:1fr 1fr}.mobileCartDock:not([hidden]){display:flex}.storefront{padding-bottom:94px}.uxToast{bottom:105px}}
 @media(max-width:560px){.storefront .topbarInner{padding:12px 20px;gap:12px}.storefront .brandLogo{height:36px;max-width:130px}.storeNav>a{display:none}.storeNav{gap:0}.navCart{font-size:12px;padding:8px 12px}.storefront .container.amIndex{padding:0 20px 30px}.storefront .atelierHero{grid-template-columns:1fr;gap:24px;padding:32px 0 25px}.atelierHeroCopy h1{font-size:44px;margin-bottom:16px}.atelierHeroCopy>p:not(.eyebrow){font-size:14px;line-height:1.65;margin-bottom:18px}.atelierHeroCopy .eyebrow{font-size:10px;margin-bottom:14px}.heroDeliveryNote{font-size:10px;margin-top:12px}.atelierHeroPhoto{height:215px;border-radius:60px 16px 60px 16px}.atelierHeroPhoto>img{object-position:center 56%}.photoCaption{width:92px;height:92px;bottom:12px;right:15px;font-size:11px}.photoCaption strong{font-size:24px}.purchaseJourney{gap:8px;padding:16px 0;margin-bottom:28px}.purchaseJourney>a,.purchaseJourney>button{align-items:start;gap:5px;flex-direction:column}.purchaseJourney>a>span,.purchaseJourney>button>span{font-size:22px}.purchaseJourney small{display:none}.purchaseJourney strong{font-size:11px;line-height:1.4}.storefront .cardTitle{font-size:27px}.storefront .products{gap:12px}.storefront .productInfo{padding:12px;gap:10px}.storefront .productCard .name{font-size:20px;min-height:67px}.storefront .productEyebrow{font-size:8px;letter-spacing:.05em}.storefront .productCard .price{font-size:15px}.storefront .productMetaRow{flex-wrap:wrap;margin-top:7px;gap:5px}.storefront .productDesc{font-size:11px;min-height:70px;line-height:1.55}.storefront .sizeBadge{font-size:9px}.storefront .cardOrder{padding:20px;margin-top:10px}.storefront .formGrid2{grid-template-columns:1fr}.storefront .reviewsHead{gap:10px;align-items:start}.storefront .reviewsHead .btn{padding:9px 12px;font-size:12px}.storefront .reviewsSummary{flex-wrap:wrap}.storefront .reviewsHint{font-size:12px}.atelierFooter{margin:0 20px;padding:25px 0;gap:22px}.atelierFooter nav{font-size:12px;gap:20px;flex-wrap:wrap}.atelierFooter>div{width:100%}.workspacePage .hubGrid{grid-template-columns:1fr}.workspacePage .hubLoginShell{margin:25px auto}.workspacePage .hubLoginCard{padding:24px 20px}.workspacePage .hubWelcomeTitle{font-size:30px}.workspacePage .orderToolbar{grid-template-columns:1fr}.orderToolbar .pendingValue{text-align:left}.workspacePage .orderItem{padding:16px}.amaredV2 .modal{max-height:calc(100dvh - 24px)}.amaredV2 .modalOverlay{padding:12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Reading, direct quantities and unobstructed dialogs. */
+.storefront .stepper input.qty{appearance:textfield;-moz-appearance:textfield;min-width:0;width:100%;height:44px;border:0;border-radius:0;text-align:center;font:800 18px var(--font-main);color:var(--choco);background:var(--paper);padding:0 2px;box-shadow:none}
+.storefront .stepper input.qty::-webkit-inner-spin-button,.storefront .stepper input.qty::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.storefront .stepper input.qty:focus{outline:2px solid #a83565;outline-offset:-3px;background:#fff0f5}
+.quantityHelp{font-size:14px;color:var(--ink-muted);line-height:1.6;margin:0 0 18px}
+.is-index-admin-view .quantityHelp{display:none}
+.storefront.ux-dialog-open .mobileCartDock,.storefront.is-loading .mobileCartDock{display:none!important}
+.storefront.ux-dialog-open,.storefront.is-loading{overflow:hidden}
+.storefront .modalOverlay,.storefront .alertOverlay{z-index:15000}
+.storefront.ux-dialog-open .uxToast{visibility:hidden}
+.workspaceNav{overflow-y:auto}
+.workspaceNavGroup{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#e8ba9e;margin:20px 12px 5px;font-weight:800}
+.workspaceNavLogo{margin-bottom:12px}
+.workspacePage .hubCardFoot{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:auto}
+.hubPending{display:inline-block;border-radius:9px;padding:6px 10px;font:800 14px/1.4 var(--font-main);background:#fff0df;color:#943b11;text-align:left}
+.hubPending.kitchen{background:#e8f0ff;color:#25569b}
+.hubPending.delivery{background:#f4e8f6;color:#793683}
+.hubPending.isClear{background:#eaf2ec;color:#32613f}
+.hubPending.isUnavailable{background:#f1eeea;color:#685b51}
+.hubActivityStatus{color:var(--ink-muted);font-size:13px;line-height:1.5;margin-bottom:0}
+.storefront .is-order-registration .amOrderLoadingMeta{display:flex;gap:12px;margin-top:18px}
+.storefront .is-order-registration .amOrderLoadingTrack{display:block;height:10px;background:#f0ded8;border-radius:20px;overflow:hidden}
+.storefront .amOrderLoadingBar{display:block;height:100%;background:linear-gradient(90deg,#a83565,#e791ae);border-radius:20px;transition:width .3s ease}
+.storefront .amOrderLoadingPercent{font-size:20px;font-variant-numeric:tabular-nums}
+.storefront .amOrderLoadingStep{font-size:14px}
+.storefront .amOrderLoadingSub{font-size:16px;line-height:1.6}
+@media(max-width:860px){
+ .workspacePage .workspaceNav{display:none!important}
+ .amaredV2 input:not([type=checkbox]):not([type=radio]),.amaredV2 select,.amaredV2 textarea{font-size:16px}
+ .amaredV2 .small,.amaredV2 .mutedSmall,.amaredV2 .label,.amaredV2 .hint,.storefront .reviewsHint{font-size:14px;line-height:1.55}
+ .storefront .atelierHeroCopy>p:not(.eyebrow){font-size:16px}
+ .storefront .heroDeliveryNote{font-size:12px;line-height:1.5}
+ .storefront .mobileCartDock small{font-size:13px}
+ .storefront .reviewsHead .btn{font-size:14px;min-height:44px}
+ .storefront .reviewText,.storefront .reviewReply{font-size:16px;line-height:1.6}
+ .storefront .cartLineName{font-size:16px}
+ .storefront .cartLinePrice{font-size:14px}
+ .workspacePage .hubCardDesc,.workspacePage .hubWelcomeSub{font-size:16px}
+ .workspacePage .hubCard{padding:20px;gap:18px}
+ .workspacePage .hubCardTitle{font-size:24px}
+ .workspacePage .hubCardBtn{font-size:14px}
+ .atelierFooter p,.teamAccess{font-size:14px}
+ .storefront .purchaseJourney strong{font-size:13px}
+ .storefront .indexAdminMobileBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;min-width:58px;gap:2px}
+ .storefront .indexAdminMobileBtn .txt{font:800 11px var(--font-main)}
+ .storefront .indexAdminMobileCenter{gap:4px;min-width:0}
+ .storefront .indexAdminMobilePill{padding:8px;font-size:13px}
+}
+@media(max-width:560px){
+ .storefront .products{grid-template-columns:1fr}
+ .storefront .productImg{aspect-ratio:16/10;max-height:290px;object-fit:cover}
+ .storefront .productInfo{padding:18px;gap:12px}
+ .storefront .productCard .name{font-size:25px;min-height:0;line-height:1.2}
+ .storefront .productDesc{font-size:16px;line-height:1.55;min-height:0}
+ .storefront .productEyebrow{font-size:11px}
+ .storefront .productCard .price{font-size:20px}
+ .storefront .sizeBadge{font-size:12px}
+ .storefront .productBottom{margin-top:0}
+ .storefront .stepper{grid-template-columns:48px minmax(0,1fr) 48px;width:100%}
+ .storefront .stepper button{min-width:44px;min-height:44px}
+}
+
+@media(max-width:860px){
+ .storefront .indexAdminMobileCenter{display:flex}
+ .storefront .indexAdminMobileBtn .txt{display:block}
+ .storefront .stepper button{width:100%}
+ .storefront .deliveryTileCopy small{font-size:14px;line-height:1.55}
+ .storefront .cartLineMeta>small{font-size:12px}
+ .workspacePage .amBottomAction,.workspacePage .amDeliveryMobileAction{flex-direction:column;gap:3px}
+ .workspacePage .amBottomAction .txt,.workspacePage .amDeliveryMobileAction .txt{display:block;font-size:11px;line-height:1.2}
+ .workspacePage .amBottomPill,.workspacePage .amDeliveryMobileSeg .txt{font-size:14px}
+ .costsPage .mNavBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:19px}
+ .costsPage .mNavBtn::after{font-size:10px;font-weight:800;line-height:1.2;content:attr(aria-label)}
+ .costsPage .hasBottomSummary .container,.costsPage.hasBottomSummary .container{padding-bottom:210px!important}
+.costsPage .btnHistoryFab{bottom:110px}
+}
+@media(max-width:860px){
+ .workspacePage .hubWelcome{margin:0 0 20px;padding:0;border:0;background:transparent}
+ .workspacePage .hubWelcomeTitle{font-size:28px;line-height:1.2}
+ .workspacePage .hubCard{gap:12px;padding:18px}
+ .workspacePage .hubCardTitle{font-size:22px}
+ .workspacePage .hubCardDesc{font-size:15px;line-height:1.55}
+ .workspacePage .hubCardBtn,.workspacePage #hubProfilePill,.workspacePage #hubCountPill{display:none}
+ .workspacePage .hubEmoji{min-width:36px;width:36px;height:36px;font-size:20px}
+ .workspacePage .amMobileAction{flex-direction:column;gap:3px}
+ .workspacePage .amMobileAction .txt{display:block;font-size:11px;line-height:1.2}
+ .workspacePage .profilesMobileBar.isHubMode{grid-template-columns:56px minmax(0,1fr) 56px}
+ .workspacePage .profilesMobileAction .txt{display:block;font-size:11px;line-height:1.2}
+ .workspacePage .amBottomIconBtn{flex-direction:column;gap:3px}
+ .workspacePage .adminMobileBtn .txt,.workspacePage .profilesMobileBtn .txt{display:block!important;position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;clip-path:none;font-size:11px;line-height:1.2;white-space:normal}
+ .workspacePage .hubMetaRow{display:none}
+}

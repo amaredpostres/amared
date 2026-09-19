@@ -718,7 +718,7 @@ function restoreIndexMapsDraft(){
   setValue("notes", fields.notes);
 
   const waOpt = document.getElementById("waOptIn");
-  if(waOpt) waOpt.checked = !!fields.wa_opt_in;
+  if(waOpt) waOpt.checked = fields.wa_opt_in !== false;
 
   const method = String(draft.location_method || "maps");
   const radio = Array.from(document.querySelectorAll('input[name="locMethod"]')).find(input => input.value === method);
@@ -1489,8 +1489,8 @@ function renderProductBottomHtml(product, qty){
   return `
         <div class="stepper">
           <button type="button" aria-label="Quitar una unidad de ${escapeHtml(product.name)}" data-action="dec" data-id="${product.id}" ${qty <= 0 ? "disabled" : ""}>−</button>
-          <div class="qty" id="qty_${product.id}">${qty}</div>
-          <button type="button" aria-label="Agregar una unidad de ${escapeHtml(product.name)}" data-action="inc" data-id="${product.id}">+</button>
+          <input class="qty" id="qty_${product.id}" data-quantity="${product.id}" type="number" inputmode="numeric" min="0" max="99" step="1" value="${qty}" aria-label="Cantidad de ${escapeHtml(product.name)}" aria-describedby="quantityHelp" autocomplete="off">
+          <button type="button" aria-label="Agregar una unidad de ${escapeHtml(product.name)}" data-action="inc" data-id="${product.id}" ${qty >= 99 ? "disabled" : ""}>+</button>
         </div>${extra}`;
 }
 
@@ -1528,11 +1528,11 @@ function updateProductCard(card, product){
   const bottomEl = card.querySelector(".productBottom");
   if(bottomEl){
     const nextBottomHtml = renderProductBottomHtml(product, qty);
-    if(bottomEl.innerHTML != nextBottomHtml) bottomEl.innerHTML = nextBottomHtml;
+    if(!bottomEl.contains(document.activeElement) && bottomEl.innerHTML != nextBottomHtml) bottomEl.innerHTML = nextBottomHtml;
   }
 
   const qtyEl = card.querySelector(`#qty_${product.id}`);
-  if(qtyEl) qtyEl.textContent = String(qty);
+  if(qtyEl && qtyEl !== document.activeElement) qtyEl.value = String(qty);
 
   const decBtn = card.querySelector('button[data-action="dec"]');
   if(decBtn) decBtn.disabled = qty <= 0;
@@ -1575,10 +1575,31 @@ function refreshProductCard(id) {
   card.classList.toggle("is-selected", qty > 0);
 
   const qtyEl = card.querySelector(`#qty_${id}`);
-  if (qtyEl) qtyEl.textContent = String(qty);
+  if (qtyEl && qtyEl !== document.activeElement) qtyEl.value = String(qty);
 
   const decBtn = card.querySelector('button[data-action="dec"]');
   if (decBtn) decBtn.disabled = qty <= 0;
+  const incBtn = card.querySelector('button[data-action="inc"]');
+  if (incBtn) incBtn.disabled = qty >= 99;
+}
+
+function onQuantityInput(event) {
+  const input = event.target.closest('input[data-quantity]');
+  if(!input || shouldUseIndexAdminView() || !_catalogReady || _catalogLoading) return;
+  const id = input.dataset.quantity;
+  const product = PRODUCTS.find(p => p.id === id);
+  if(!product || product.available === false || isProductDisabledForPromo(product)) return;
+  const raw = input.value.trim();
+  const committed = event.type !== 'input';
+  let qty = Number(raw);
+  if(!committed && (!raw || !Number.isInteger(qty) || qty < 0 || qty > 99)) return;
+  if(committed) {
+    qty = input.validity.badInput ? (cart.get(id) || 0) : Math.max(0, Math.min(99, Math.trunc(Number.isFinite(qty) ? qty : 0)));
+    input.value = String(qty);
+  }
+  cart.set(id, qty);
+  refreshProductCard(id);
+  updateSummary();
 }
 
 function onProductsClick(e) {
@@ -1622,6 +1643,11 @@ function renderProducts(forceRebuild = false) {
 
   if (!elProducts.dataset.bound) {
     elProducts.addEventListener("click", onProductsClick);
+    elProducts.addEventListener("input", onQuantityInput);
+    elProducts.addEventListener("change", onQuantityInput);
+    elProducts.addEventListener("focusout", onQuantityInput);
+    elProducts.addEventListener("focusin", event => { if(event.target.matches('input[data-quantity]')) event.target.select(); });
+    elProducts.addEventListener("keydown", event => { if(event.key === 'Enter' && event.target.matches('input[data-quantity]')) { event.preventDefault(); event.target.blur(); } });
     elProducts.dataset.bound = "1";
   }
 }
@@ -1909,7 +1935,7 @@ function resetAll() {
   if (emailEl) emailEl.value = "";
 
   const waOpt = document.getElementById("waOptIn");
-  if (waOpt) waOpt.checked = false;
+  if (waOpt) waOpt.checked = true;
 
   const rWhatsApp = document.querySelector('input[name="locMethod"][value="whatsapp"]');
   if (rWhatsApp) rWhatsApp.checked = true;
@@ -2067,10 +2093,10 @@ btnSendWhatsApp?.addEventListener("click", async () => {
   if (!pending || btnSendWhatsApp.disabled) return;
   btnSendWhatsApp.disabled = true;
   btnCloseModal.disabled = true;
-  showLoading("Registrando tu pedido…", "Espera la confirmación. Conservaremos tu código si necesitas reintentar.");
+  showLoading("Registrando tu pedido…", "Espera la confirmación. Conservaremos tu código si necesitas reintentar.", true);
   try {
     const orderId = await saveOrder(pending.data);
-    hideModal(); hideLoading();
+    await completeLoadingSuccess(); hideModal();
     clearIndexMapsDraft();
     showOrderSuccess(pending.data, orderId || pending.orderId, pending.messageNormal);
   } catch (error) {
@@ -2292,23 +2318,20 @@ function setLoadingProgress(value){
   if(loadingPercent) loadingPercent.textContent = `${_loadingProgress}%`;
   if(loadingBar) loadingBar.style.width = `${_loadingProgress}%`;
 
-  if(loadingStep){
-    if(_loadingProgress < 20) loadingStep.textContent = "Iniciando pedido";
-    else if(_loadingProgress < 45) loadingStep.textContent = "Conectando con AMARED";
-    else if(_loadingProgress < 70) loadingStep.textContent = "Validando información";
-    else if(_loadingProgress < 100) loadingStep.textContent = "Preparando confirmación";
-    else loadingStep.textContent = "Pedido registrado";
-  }
+  const track = loadingBar?.parentElement;
+  track?.setAttribute('aria-valuenow', String(_loadingProgress));
+  track?.setAttribute('aria-valuetext', _loadingProgress === 100 ? 'Pedido registrado' : `${_loadingProgress}% estimado; esperando confirmación`);
+  if(loadingStep) loadingStep.textContent = _loadingProgress === 100 ? "¡Pedido registrado!" : "Progreso estimado";
 }
 
 function startLoadingProgressLoop(){
   clearInterval(_loadingTimer);
   _loadingTimer = setInterval(() => {
-    const limit = 84;
-    if(_loadingProgress >= limit) return;
-    const step = _loadingProgress < 18 ? 4 : _loadingProgress < 42 ? 3 : _loadingProgress < 68 ? 2 : 1;
-    setLoadingProgress(Math.min(limit, _loadingProgress + step));
-  }, 170);
+    // No backend percentage exists. Never imply completion before its response.
+    const elapsed = Date.now() - _loadingStartTs;
+    setLoadingProgress(Math.min(92, 8 + 84 * (1 - Math.exp(-elapsed / 9000))));
+    if(elapsed > 18000 && loadingSub) loadingSub.textContent = "Está tardando un poco más. Seguimos esperando la confirmación; no necesitas crear otro pedido.";
+  }, 350);
 }
 
 function animateLoadingTo(target, duration = 420){
@@ -2334,7 +2357,7 @@ function animateLoadingTo(target, duration = 420){
   });
 }
 
-function showLoading(text="Procesando...", sub=""){
+function showLoading(text="Procesando...", sub="", orderRegistration=false){
   try{
     _loadingStartTs = Date.now();
     clearInterval(_loadingTimer);
@@ -2349,6 +2372,7 @@ function showLoading(text="Procesando...", sub=""){
     if(loadingSub) loadingSub.textContent = finalSub;
     setLoadingProgress(0);
     if(loadingOverlay){
+      loadingOverlay.classList.toggle("is-order-registration", orderRegistration);
       loadingOverlay.classList.remove("hidden");
       loadingOverlay.setAttribute("aria-hidden","false");
       loadingOverlay.style.zIndex = "31000";
@@ -2356,11 +2380,18 @@ function showLoading(text="Procesando...", sub=""){
     }
     document.body.classList.add("is-loading");
     syncIndexAdminMobileBar();
-    // The server does not expose numeric progress; keep the loading message indeterminate.
+    if(orderRegistration) startLoadingProgressLoop();
   }catch(_e){}
 }
 
-async function completeLoadingSuccess(){ hideLoading(); }
+async function completeLoadingSuccess(){
+  clearInterval(_loadingTimer);
+  if(loadingText) loadingText.textContent = '¡Tu pedido quedó registrado!';
+  if(loadingSub) loadingSub.textContent = 'Ahora puedes confirmar el pago y la entrega por WhatsApp.';
+  await animateLoadingTo(100, matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 350);
+  await new Promise(resolve => setTimeout(resolve, 250));
+  hideLoading();
+}
 function hideLoading(){
   clearInterval(_loadingTimer);
   if(loadingOverlay){ loadingOverlay.classList.add("hidden"); loadingOverlay.setAttribute("aria-hidden","true"); loadingOverlay.style.display="none"; }
@@ -2521,7 +2552,7 @@ function applyIndexAdminVisibility(){
 function syncIndexAdminMobileBar(){
   if(!indexAdminMobileBar) return;
   const enabled = shouldUseIndexAdminView();
-  const mobile = window.matchMedia("(max-width: 720px)").matches;
+  const mobile = window.matchMedia("(max-width: 860px)").matches;
   const blocked = !enabled || !mobile || document.body.classList.contains("is-loading") || !alertOverlay?.classList.contains("hidden") || !modal?.classList.contains("hidden") || !reviewModal?.classList.contains("hidden") || !adminReviewsModal?.classList.contains("hidden");
   indexAdminMobileBar.classList.toggle("hidden", blocked);
   indexAdminMobileBar.classList.toggle("isVisible", !blocked);
@@ -2529,7 +2560,7 @@ function syncIndexAdminMobileBar(){
     const hasHub = hasHubSession() || /(^|\/)hub\.html(?:\?|$)/i.test(String(document.referrer || ""));
     const ico = btnIndexAdminBarHub.querySelector(".ico");
     if(ico) ico.textContent = hasHub ? "⌂" : "↑";
-    btnIndexAdminBarHub.setAttribute("aria-label", hasHub ? "Volver al panel" : "Volver arriba");
+    btnIndexAdminBarHub.setAttribute("aria-label", hasHub ? "Inicio" : "Volver arriba");
   }
   btnIndexAdminBarOpiniones?.setAttribute("aria-label", "Ir a opiniones");
   btnIndexAdminBarTools?.setAttribute("aria-label", "Ir a precios");

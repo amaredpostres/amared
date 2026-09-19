@@ -736,7 +736,7 @@ select.input{
    - Solo visible en móvil y SOLO después de login (JS controla .hidden)
    ============================== */
 
-@media (max-width: 560px){
+@media (max-width: 860px){
   /* Ocultar botones superiores en móvil (mantener logo) */
   .costsPage .topbarInner .pTopBtns{ display:none !important; }
 
@@ -856,7 +856,7 @@ select.input{
   .mobileSheetClose{ width: 100%; margin-top: 10px; }
 }
 
-@media (min-width: 561px){
+@media (min-width: 861px){
   /* Nunca mostrar menú inferior en escritorio */
   .mobileNav, .mobileSheetBack{ display:none !important; }
 }
@@ -1051,11 +1051,11 @@ select.input{
    - Visible en móvil
    - Oculto en escritorio
    ============================== */
-@media (max-width: 560px){
+@media (max-width: 860px){
   .costsPage #mobileNav{ display:flex; }
 }
 
-@media (min-width: 561px){
+@media (min-width: 861px){
   .costsPage #mobileNav,
   .costsPage #mNavSheetBack{
     display:none !important;

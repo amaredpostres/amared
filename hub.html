@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>AMARED · Mi espacio</title>
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="styles.css?v=20260505-fonts-v1">
+  <link rel="stylesheet" href="styles.css?v=20260919-ux22">
   <style>
     html.hubBoot body { opacity: 1; overflow: hidden; }
     html.hubReady body { opacity: 1; transition: opacity .12s ease; }
@@ -83,7 +83,7 @@
     .hubPage .topbarInner{ justify-content:space-between; }
     .hubLoginTopbar .topbarInner{ justify-content:center; }
     .hubLoginTopbar img{ height:48px; width:auto; display:block; }
-    .hubLoginShell{ max-width:720px; margin:24px auto 0; }
+    .hubLoginShell{ max-width:860px; margin:24px auto 0; }
     .hubLoginCard{ background:var(--paper); border:1px solid var(--border); border-radius:26px; padding:22px; box-shadow:var(--shadow); }
     .hubLoginTitle{ margin:0 0 8px; text-align:center; font-weight:950; font-size:clamp(26px,3vw,40px); line-height:1.08; }
     .hubLoginLead{ margin:0 0 18px; text-align:center; font-size:clamp(14px,1.35vw,17px); color:rgba(64,17,2,.74); font-weight:850; }
@@ -123,11 +123,11 @@
     #hubLoading .amLoadingCard{ width:min(420px, calc(100vw - 32px)); padding:20px 20px 18px; border-radius:24px; }
     #hubLoading .amLoadingTitle{ font-size:18px; }
     #hubLoading .amLoadingSub{ font-size:13px; font-weight:850; }
-    @media (max-width:720px){ #hubLoading .amLoadingTitle{ font-size:16px; } #hubLoading .amLoadingSub{ font-size:12px; } }
+    @media (max-width:860px){ #hubLoading .amLoadingTitle{ font-size:16px; } #hubLoading .amLoadingSub{ font-size:12px; } }
     .hubPage.is-app main.container{ padding-bottom:116px; }
-    @media (min-width: 721px){ .hubPage.is-app main.container{ padding-bottom:24px; } }
+    @media (min-width: 861px){ .hubPage.is-app main.container{ padding-bottom:24px; } }
     @media (max-width: 860px){ .hubGrid{ grid-template-columns:1fr; } }
-    @media (max-width: 720px){
+    @media (max-width: 860px){
       .hubTopbar .topbarInner{ justify-content:center; }
       .hubBrand{ width:100%; justify-content:center; text-align:center; }
       .hubBrandMeta{ align-items:center; }
@@ -139,7 +139,7 @@
       .hubLoginLead{ font-size:15px; }
     }
   </style>
-<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260919"><script src="config.js?v=20260919"></script><script src="runtime.js?v=20260919"></script></head>
+<meta name="description" content="Postres artesanales AMARED en Ibagué. Elige tu favorito, solicita domicilio o recogida y confirma tu pedido por WhatsApp."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"><link rel="stylesheet" href="experience.css?v=20260919-ux22"><script src="config.js?v=20260919-ux22"></script><script src="runtime.js?v=20260919-ux22"></script></head>
 <body class="hubPage is-login amaredV2 workspacePage">
   <a class="skipLink" href="#main-content">Saltar al contenido</a><div class="amHubBootOverlay" aria-hidden="true">
     <div class="amHubBootCard">
@@ -209,7 +209,7 @@
     <section class="hubApp" id="hubAppView">
       <section class="card hubWelcome">
         <h1 class="hubWelcomeTitle" id="hubWelcomeTitle">Hola</h1>
-        <p class="hubWelcomeSub">Selecciona una página para entrar sin volver a escribir tu usuario y contraseña.</p>
+        <p class="hubWelcomeSub">Consulta los pendientes de tu negocio y accede a cada sección.</p><p id="hubActivityStatus" class="hubActivityStatus" role="status"></p>
         <div class="hubMetaRow">
           <div class="pill" id="hubProfilePill">Perfil activo</div>
           <div class="pill" id="hubCountPill">0 páginas</div>
@@ -244,6 +244,6 @@
     </div>
   </div>
 
-  <script src="hub.js?v=20260328-async-shell-v2"></script>
-<script src="experience.js?v=20260918" defer></script></body>
+  <script src="hub.js?v=20260919-ux22"></script>
+<script src="experience.js?v=20260919-ux22" defer></script></body>
 </html>

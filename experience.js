@@ -30,6 +30,7 @@
   const focusables = el => [...el.querySelectorAll('a[href],button,input,select,textarea,summary,[tabindex="0"]')].filter(n => !n.disabled && n.getClientRects().length);
   const syncDialogs = () => {
     const next = overlays.filter(shown).sort((a,b) => (Number(getComputedStyle(a).zIndex)||0)-(Number(getComputedStyle(b).zIndex)||0)).at(-1) || null;
+    document.body.classList.toggle('ux-dialog-open', !!next);
     if (next === activeDialog) return;
     if (next) {
       if (!activeDialog) returnFocus = document.activeElement;
@@ -71,6 +72,7 @@
     document.querySelectorAll('[data-checkout-open]').forEach(button => button.addEventListener('click',openCheckout));
     let draftTimer;
     const saveDraft = () => { clearTimeout(draftTimer); draftTimer = setTimeout(() => { try { saveIndexMapsDraft(); } catch {} }, 300); };
+    $('products').addEventListener('input',saveDraft); $('products').addEventListener('change',saveDraft);
     $('pedido').addEventListener('input',saveDraft); $('pedido').addEventListener('change',saveDraft);
     window.addEventListener('pagehide', () => { try { if (!$('orderSuccess')) saveIndexMapsDraft(); } catch {} });
     const syncCart = () => {
@@ -123,6 +125,10 @@
   const isCatalogAdmin = isStore && shouldUseIndexAdminView();
   if (!isStore || isCatalogAdmin) {
     if (isCatalogAdmin) {
+      $('btnIndexAdminBarRefresh')?.addEventListener('click', async event => {
+        const button=event.currentTarget; button.disabled=true;
+        try { await Promise.all([bootProductsCatalog(),fetchReviews()]); } finally { button.disabled=false; }
+      });
       document.body.classList.add('workspacePage','is-app');
       $('postres').querySelector('.sectionKicker').textContent = 'CATÁLOGO Y OPINIONES';
       $('postres').querySelector('.cardTitle').textContent = 'Vista del catálogo';
@@ -141,8 +147,13 @@
       try { const session=JSON.parse(sessionStorage.getItem('AMARED_HUB_SESSION_V1')||localStorage.getItem('AMARED_HUB_REMEMBER_V1')||'null'); categories=session?.categories||[]; } catch {}
       if (!Array.isArray(categories)) categories=String(categories).split(',');
       nav.querySelectorAll('[data-module]').forEach(n=>n.remove());
+      let currentGroup = '';
       entries.forEach(([href,label],i)=>{
         if(i && !roles[i].some(r=>categories.includes(r)) && href!==page) return;
+        const group = i >= 4 ? 'Administración' : i >= 1 ? 'Operación diaria' : '';
+        if(group && group !== currentGroup) {
+          const heading=document.createElement('span'); heading.className='workspaceNavGroup'; heading.textContent=group; heading.dataset.module='1'; nav.append(heading); currentGroup=group;
+        }
         const a=document.createElement('a'); a.href=href;a.textContent=label;a.dataset.module='1';
         if(href===page) a.setAttribute('aria-current','page');
         a.addEventListener('click',()=>{

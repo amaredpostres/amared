@@ -94,33 +94,33 @@ function syncProfilesHubChrome(){
   const hubMode = FROM_HUB;
   try{ document.body.classList.toggle("is-hub-flow", hubMode); }catch(_e){}
   if(btnBack){
-    btnBack.textContent = hubMode ? "Panel" : "Volver";
-    btnBack.setAttribute("aria-label", hubMode ? "Volver al panel" : "Volver");
+    btnBack.textContent = hubMode ? "Inicio" : "Volver";
+    btnBack.setAttribute("aria-label", hubMode ? "Inicio" : "Volver");
   }
   if(btnGateBack){
-    btnGateBack.textContent = hubMode ? "Volver al panel" : "Volver atrás";
+    btnGateBack.textContent = hubMode ? "Inicio" : "Volver atrás";
   }
   if(btnLogout){
     btnLogout.style.display = hubMode ? "none" : "";
     if(hubMode) btnLogout.disabled = true;
   }
   if(btnMobileBack){
-    const backLabel = hubMode ? "Panel" : "Volver";
-    btnMobileBack.setAttribute("aria-label", hubMode ? "Volver al panel" : "Volver");
+    const backLabel = hubMode ? "Nuevo perfil" : "Volver";
+    btnMobileBack.setAttribute("aria-label", backLabel);
     const ico = btnMobileBack.querySelector('.ico');
     const txt = btnMobileBack.querySelector('.txt');
-    if(ico) ico.textContent = hubMode ? '⌂' : '↩';
+    if(ico) ico.textContent = hubMode ? '+' : '↩';
     if(txt) txt.textContent = backLabel;
     if(!txt) btnMobileBack.textContent = backLabel;
   }
   if(btnMobileLock){
-    btnMobileLock.style.display = hubMode ? "none" : "";
-    btnMobileLock.disabled = !!hubMode;
-    btnMobileLock.setAttribute("aria-label", hubMode ? "Volver al panel" : "Salir");
+    btnMobileLock.style.display = "";
+    btnMobileLock.disabled = false;
+    btnMobileLock.setAttribute("aria-label", hubMode ? "Inicio" : "Salir");
     const ico = btnMobileLock.querySelector('.ico');
     const txt = btnMobileLock.querySelector('.txt');
     if(ico) ico.textContent = hubMode ? '⌂' : '⎋';
-    if(txt) txt.textContent = hubMode ? 'Panel' : 'Salir';
+    if(txt) txt.textContent = hubMode ? 'Inicio' : 'Salir';
   }
   if(profilesMobileBar) profilesMobileBar.classList.toggle("isHubMode", hubMode);
 }
@@ -418,7 +418,7 @@ async function api(payload){
 
 function syncProfilesMobileBar(){
   if(!profilesMobileBar) return;
-  const mobile = window.matchMedia("(max-width: 720px)").matches;
+  const mobile = window.matchMedia("(max-width: 860px)").matches;
   const unlocked = !!mgrCard && mgrCard.style.display !== "none";
   const gateVisible = !!gateCard && gateCard.style.display !== "none";
   const hasOverlay = (editBack && editBack.style.display === "flex") || (loading && loading.style.display === "flex");
@@ -1138,7 +1138,7 @@ inpSecret?.addEventListener("keydown", (e)=>{ if(e.key === "Enter") btnUnlock?.c
 syncProfilesHubChrome();
 btnMobileReload?.addEventListener("click", ()=> btnReload?.click());
 btnMobileBack?.addEventListener("click", ()=> {
-  if(FROM_HUB) goHubFromProfiles_();
+  if(FROM_HUB) { document.getElementById('inpName')?.scrollIntoView({block:'center'}); document.getElementById('inpName')?.focus({preventScroll:true}); }
   else btnBack?.click();
 });
 btnMobileLock?.addEventListener("click", ()=> {

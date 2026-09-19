@@ -1207,7 +1207,7 @@ function ensureKitchenHubReturnUI(){
     btn.id = "btnKitchenHub";
     btn.type = "button";
     btn.className = "btn amBtnSoft";
-    btn.textContent = "Panel";
+    btn.textContent = "Inicio";
     btn.addEventListener("click", goHub_);
     headerBtns.insertBefore(btn, btnLogout || null);
   }
@@ -1220,9 +1220,9 @@ function syncKitchenMobileReturnAction(){
   const fromHub = hasHubAccess_();
   const ico = mBtnLogout.querySelector('.ico');
   const txt = mBtnLogout.querySelector('.txt');
-  mBtnLogout.setAttribute('aria-label', fromHub ? 'Volver al panel' : 'Salir');
+  mBtnLogout.setAttribute('aria-label', fromHub ? 'Inicio' : 'Salir');
   if(ico) ico.textContent = fromHub ? '⌂' : '🚪';
-  if(txt) txt.textContent = fromHub ? 'Panel' : 'Salir';
+  if(txt) txt.textContent = fromHub ? 'Inicio' : 'Salir';
 }
   function syncActionBarsVisibility(){
     const headerBtns = btnRefresh?.parentElement;
