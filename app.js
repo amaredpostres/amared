@@ -403,6 +403,7 @@ async function bootProductsCatalog(){
     renderProducts();
     updateSummary();
     try{ renderIndexAdminPriceEditor(); }catch(_e){}
+    window.dispatchEvent(new Event("amared:catalog-ready"));
   }
 }
 async function syncProductsCatalogFromBackend(force = false){
@@ -1667,8 +1668,11 @@ function updateSummary() {
     elCartSummary.innerHTML = items
       .map(it => `
         <div class="cartLine">
-          <span class="cartLineName">${escapeHtml(it.name)}</span>
-          <span class="cartLineMeta">x${it.qty}</span>
+          <div class="cartLineDetail">
+            <span class="cartLineName">${escapeHtml(it.name)}</span>
+            <span class="cartLinePrice">$${money(it.price)} c/u <span aria-hidden="true">·</span> <strong>$${money(it.qty * it.price)}</strong></span>
+          </div>
+          <span class="cartLineMeta" aria-label="${it.qty} ${it.promoCombo ? (it.qty === 1 ? 'combo' : 'combos') : (it.qty === 1 ? 'unidad' : 'unidades')}"><strong>${it.qty}</strong><small>${it.promoCombo ? (it.qty === 1 ? 'combo' : 'combos') : (it.qty === 1 ? 'unidad' : 'unidades')}</small></span>
         </div>
       `)
       .join("");

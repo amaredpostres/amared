@@ -3,6 +3,7 @@
   const pending = new Map();
   const safeReads = new Set(['products_catalog_public', 'profiles_public_list', 'reviews_list']);
   window.amaredRequest = async function(url, options = {}) {
+    if (!url) throw new Error('La conexión de esta versión todavía no está configurada. La tienda de prueba aún no puede recibir pedidos.');
     let action = '';
     try { action = JSON.parse(options.body || '{}').action || ''; } catch {}
     const key = safeReads.has(action) && !options.signal ? `${url}:${options.body}` : null;
